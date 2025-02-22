@@ -9,8 +9,9 @@ pixi install
 The deepface, mediapipe library is not found, so we are using:
 
 ```
-pip install deepface
-pip install mediapipe
+pixi add langchain-community --pypi
+pixi add mediapipe --pypi
+pixi add deepface --pypi
 ```
 
 then, source into the workspace with
