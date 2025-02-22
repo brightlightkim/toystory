@@ -19,7 +19,7 @@ async def fetch_latest_image_from_supabase(bucket_name="robot", folder_name="ima
     try:
         response = supabase.storage.from_(bucket_name).list(
             folder_name,
-            {"limit": 1, "sortBy": {"column": "created_at", "order": "desc"}},
+            {"limit": 1, "sortBy": {"column": ".metadata.created_at", "order": "desc"}},
         )
 
         if response and len(response) > 0:
