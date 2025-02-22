@@ -16,8 +16,8 @@ supabase: Client = create_client(supabase_url=SUPABASE_URL, supabase_key=SUPABAS
 
 
 class TTSController:
-    def __init__(self, PLAYHT_API_KEY, PLAYHT_USER_ID):
-        self.api_key = PLAYHT_API_KEY
+    def __init__(self):
+        self.api_key = os.getenv("PLAYHT_API_KEY")
         self.user_id = os.getenv("PLAYHT_USER_ID")
         self.base_url = "https://api.play.ht/api/v2/"
 
