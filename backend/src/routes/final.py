@@ -1,7 +1,7 @@
 import tempfile
 import os
 import sys
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
@@ -14,18 +14,16 @@ from controllers import supabase_handler, openai_chat_controller, tts_controller
 client = OpenAI()
 
 
-class TranscribeRequest(BaseModel):
-    job_name: str
-    job_uri: str
-    media_format: str = "mp3"
-    language_code: str = "en-US"
+class FinalRequest(BaseModel):
+    character: str
+    voice_repo: Optional[str]
 
 
 final_router = APIRouter(prefix="/final")
 
 
 @final_router.post("/")
-async def final_function(character: str, voice_repo: str='') -> Dict[str, Any]:
+async def final_function(request: FinalRequest) -> Dict[str, Any]:
     try:
         latest_audio = await supabase_handler.fetch_latest_user_audio_from_supabase()
         if latest_audio:
@@ -45,7 +43,7 @@ async def final_function(character: str, voice_repo: str='') -> Dict[str, Any]:
             os.unlink(temp_file_path)
             transcribed_text = transcription.text
             
-            characterized_response = openai_chat_controller(character=character, prompt=transcribed_text)
+            characterized_response = openai_chat_controller(character=request.character, prompt=transcribed_text)
             
             if not characterized_response:
                 return {"status": 404, "message": "No response generated"}
