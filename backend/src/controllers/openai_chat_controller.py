@@ -2,10 +2,21 @@ from openai import OpenAI
 import os
 import json
 
+max_retries = 3
+
+
+class InvalidResponseError(Exception):
+    pass
+
+
+def validate_response(response_dict):
+    required_fields = {"script", "original_script", "voice", "type"}
+    return all(field in response_dict for field in required_fields)
+
 
 def openai_chat_controller(character: str, prompt: str):
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-    
+
     prompt = (
         f"""
         <direction>
@@ -61,14 +72,28 @@ def openai_chat_controller(character: str, prompt: str):
     history = [
         {"role": "user", "content": prompt},
     ]
-    
-    result = client.chat.completions.create(
-		model="gpt-4o",
-		messages=history,
-		response_format={"type": "json_object"},
-	)
-    
-    response_content = result.choices[0].message.content
-    response_dict = json.loads(response_content)
-    
-    return response_dict
+
+    retry_count = 0
+    while retry_count < max_retries:
+        try:
+            result = client.chat.completions.create(
+                model="gpt-4o",
+                messages=history,
+                response_format={"type": "json_object"},
+            )
+
+            response_content = result.choices[0].message.content
+            response_dict = json.loads(response_content)
+
+            if validate_response(response_dict):
+                return response_dict
+
+            retry_count += 1
+
+        except json.JSONDecodeError:
+            retry_count += 1
+            continue
+
+    raise InvalidResponseError(
+        "Failed to get valid response after 3 attempts. Response must include 'script', 'original_script', 'voice', and 'type' fields."
+    )
