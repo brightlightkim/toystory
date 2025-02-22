@@ -3,7 +3,7 @@ authors = ["menamerai <rphananh@gmail.com>"]
 channels = ["conda-forge"]
 description = "Add a short description here"
 name = "backend"
-platforms = ["win-64", "osx-64", "osx-arm64"]
+platforms = ["win-64", "osx-64", "osx-arm64", "linux-64"]
 version = "0.1.0"
 
 [tasks]
@@ -12,14 +12,14 @@ version = "0.1.0"
 fastapi = ">=0.115.8,<0.116"
 google-genai = ">=1.0.0,<2"
 opencv = ">=4.11.0,<5"
-supabase = ">=2.6.0,<3"
 langchain = ">=0.3.17,<0.4"
 langchain-google-genai = ">=2.0.10,<3"
 python-dotenv = ">=1.0.1,<2"
 boto3 = ">=1.36.25,<2"
-openai = ">=1.63.2"
-ultralytics = ">=8.3.78"
-pytorch = ">=2.6.0"
-torchvision = ">=0.21.0"
-httpx = ">=0.24.0"
-gotrue = "==2.8.0"
+datasets = ">=3.3.2,<4"
+langchain-community = ">=0.3.16,<0.4"
+httpx = ">=0.26"
+
+[pypi-dependencies]
+huggingface-hub = { version = "*", extras = ["cli"] }
+supabase = ">=2.13.0, <3"
