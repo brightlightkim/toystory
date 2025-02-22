@@ -6,10 +6,11 @@ Install pixi. Then, run
 pixi install
 ```
 
-The deepface library is not found, so we are using:
+The deepface, mediapipe library is not found, so we are using:
 
 ```
 pip install deepface
+pip install mediapipe
 ```
 
 then, source into the workspace with
