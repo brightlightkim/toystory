@@ -16,7 +16,7 @@ client = OpenAI()
 
 class FinalRequest(BaseModel):
     character: str
-    voice_repo: Optional[str]
+    voice_repo: Optional[str]="s3://voice-cloning-zero-shot/a9cabd69-695e-48a2-a96d-1f237840c7bc/original/manifest.json"
 
 
 final_router = APIRouter(prefix="/final")
