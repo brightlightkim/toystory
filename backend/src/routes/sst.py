@@ -4,9 +4,9 @@ import sys
 sys.path.append("..")
 from controllers import aws_transcribe
 
-speech_to_text_router = APIRouter(prefix="/speech_to_text")
+sst_router = APIRouter(prefix="/sst")
 
-@speech_to_text_router.post("/transcribe/")
+@sst_router.post("/")
 async def transcribe(job_name: str, job_uri: str, media_format: str = 'mp3', language_code: str = 'en-US'):
     try:
         transcript_data = aws_transcribe.transcribe_audio(job_name, job_uri, media_format, language_code)

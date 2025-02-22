@@ -34,7 +34,7 @@ const Counseling = () => {
   ];
 
   // 🌟 데이터 소스 선택 상태 (웹캠 또는 로봇)
-  const [dataSource, setDataSource] = useState("webcam"); // 'webcam' 또는 'robot'
+  const [dataSource, setDataSource] = useState("robot"); // 'webcam' 또는 'robot'
 
   // useEffect(() => {
   //   if (dataSource === "robot") {
@@ -167,7 +167,7 @@ const Counseling = () => {
         <div className="flex flex-col justify-center items-center bg-white p-8 min-h-screen">
           <h2 className="text-xl font-semibold mb-4">AI Counseling Session</h2>
 
-          {/* 🌟 비디오 컴포넌트: 웹캠만 표시 */}
+          {/* 🌟 비디오 컴포넌트: 웹캠만 표시
           {dataSource === "webcam" && (
             <div className=" bg-gray-800 border-2 border-white shadow-lg rounded-lg transition-all duration-300 w-96">
               <VideoCapture />
@@ -182,7 +182,7 @@ const Counseling = () => {
                 )}
               </button>
             </div>
-          )}
+          )} */}
 
           {/* Avatar Dropdown */}
           <div className="absolute top-16 right-16">
