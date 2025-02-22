@@ -26,4 +26,4 @@ langchain-community = ">=0.3.16,<0.4"
 
 [pypi-dependencies]
 huggingface-hub = { version = "*", extras = ["cli"] }
-supabase = ">=2.13.0"
+supabase = ">=2.13.0, <3"
