@@ -36,12 +36,12 @@ const Counseling = () => {
   // 🌟 데이터 소스 선택 상태 (웹캠 또는 로봇)
   const [dataSource, setDataSource] = useState("webcam"); // 'webcam' 또는 'robot'
 
-  useEffect(() => {
-    if (dataSource === "robot") {
-      const interval = setInterval(fetchRobotEmotion, 1000); // 로봇 데이터 주기적 GET 요청
-      return () => clearInterval(interval);
-    }
-  }, [dataSource]);
+  // useEffect(() => {
+  //   if (dataSource === "robot") {
+  //     const interval = setInterval(fetchRobotEmotion, 10000); // 로봇 데이터 주기적 GET 요청
+  //     return () => clearInterval(interval);
+  //   }
+  // }, [dataSource]);
 
   const fetchRobotEmotion = async () => {
     try {

@@ -2,7 +2,8 @@ import os
 from fastapi import FastAPI
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
-from routes.openai import openai_router  # Modified this line
+from routes.openai import openai_router
+from routes.speech_to_text import speech_to_text_router
 
 # 현재 파일의 디렉토리를 기준으로 상대 경로 설정
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -17,6 +18,7 @@ else:
 app = FastAPI()
 
 app.include_router(openai_router)
+app.include_router(speech_to_text_router)
 
 # CORS 설정 (React 프론트엔드 연결)
 app.add_middleware(
