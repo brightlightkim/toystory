@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 from routes.openai import openai_router
+from routes.sst import sst_router
 from routes.tts_routes import tts_router  
 
 # 현재 파일의 디렉토리를 기준으로 상대 경로 설정
@@ -20,11 +21,8 @@ else:
 app = FastAPI()
 
 app.include_router(openai_router)
+app.include_router(sst_router)
 app.include_router(tts_router)
-
-@app.get("/")
-async def root():
-    return {"message": "Welcome to the Speech-to-Text API"}
 
 # CORS 설정 (React 프론트엔드 연결)
 app.add_middleware(

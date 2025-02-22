@@ -6,22 +6,22 @@ const HappinessChart = () => {
   const [happinessData, setHappinessData] = useState([]);
   const [labels, setLabels] = useState([]);
 
-  useEffect(() => {
-    const fetchHappinessScore = async () => {
-      try {
-        const response = await fetch("http://localhost:8000/emotion/happiness_score/");
-        const data = await response.json();
+  // useEffect(() => {
+  //   const fetchHappinessScore = async () => {
+  //     try {
+  //       const response = await fetch("http://localhost:8000/emotion/happiness_score/");
+  //       const data = await response.json();
 
-        setHappinessData((prevData) => [...prevData.slice(-9), data.happiness_score]);
-        setLabels((prevLabels) => [...prevLabels.slice(-9), new Date().toLocaleTimeString()]);
-      } catch (error) {
-        console.error("Error fetching happiness score:", error);
-      }
-    };
+  //       setHappinessData((prevData) => [...prevData.slice(-9), data.happiness_score]);
+  //       setLabels((prevLabels) => [...prevLabels.slice(-9), new Date().toLocaleTimeString()]);
+  //     } catch (error) {
+  //       console.error("Error fetching happiness score:", error);
+  //     }
+  //   };
 
-    const interval = setInterval(fetchHappinessScore, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  //   const interval = setInterval(fetchHappinessScore, 5000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   const chartData = {
     labels: labels,

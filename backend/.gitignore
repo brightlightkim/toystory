@@ -145,3 +145,7 @@ __pycache__
 # pixi environments
 .pixi
 *.egg-info
+
+# yolov files
+.yolov
+*yolov*.pt

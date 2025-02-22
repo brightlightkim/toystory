@@ -5,26 +5,26 @@ const VideoCapture = () => {
   const canvasRef = useRef(null);
   const sendingRef = useRef(false); // ✅ useState 대신 useRef 사용 (리렌더링 방지)
 
-  useEffect(() => {
-    // ✅ 웹캠 스트림 가져오기
-    navigator.mediaDevices
-      .getUserMedia({ video: true })
-      .then((stream) => {
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
-      })
-      .catch((err) => console.error("Error accessing webcam:", err));
+  // useEffect(() => {
+  //   // ✅ 웹캠 스트림 가져오기
+  //   navigator.mediaDevices
+  //     .getUserMedia({ video: true })
+  //     .then((stream) => {
+  //       if (videoRef.current) {
+  //         videoRef.current.srcObject = stream;
+  //       }
+  //     })
+  //     .catch((err) => console.error("Error accessing webcam:", err));
 
-    // ✅ 1초마다 캡처하여 백엔드로 전송 (sendingRef 사용)
-    const interval = setInterval(() => {
-      if (!sendingRef.current) {
-        captureAndSendFrame();
-      }
-    }, 1000);
+  //   // ✅ 1초마다 캡처하여 백엔드로 전송 (sendingRef 사용)
+  //   const interval = setInterval(() => {
+  //     if (!sendingRef.current) {
+  //       captureAndSendFrame();
+  //     }
+  //   }, 1000);
 
-    return () => clearInterval(interval);
-  }, []);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   const captureAndSendFrame = async () => {
     if (!videoRef.current || !canvasRef.current) return;
