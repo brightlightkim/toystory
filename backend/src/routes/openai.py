@@ -1,16 +1,15 @@
 from fastapi import APIRouter, Query
 from typing import Annotated
 from pydantic import BaseModel
-from ..controllers import root_controller, openai_chat_controller
+
+import sys
+sys.path.append("..")
+from controllers.openai_chat_controller import openai_chat_controller
 
 class Prompt(BaseModel):
   content: str
 
 openai_router = APIRouter(prefix="/openai")
-
-@openai_router.get("/")
-def openai_root():
-	return root_controller()
 
 # style:
 # - ted: default

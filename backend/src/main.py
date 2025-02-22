@@ -1,8 +1,8 @@
-from fastapi import FastAPI
-from .routes import openai_router
 import os
+from fastapi import FastAPI
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
+from routes.openai import openai_router  # Modified this line
 
 # 현재 파일의 디렉토리를 기준으로 상대 경로 설정
 current_dir = os.path.dirname(os.path.abspath(__file__))

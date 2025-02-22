@@ -246,7 +246,8 @@ const Counseling = () => {
           )}
         </button>
 
-        <h3 className="text-lg font-semibold mb-4">RAG Panel</h3>
+        <h3 className="text-lg font-semibold mb-4">RAG with Finetuned Embedding Model</h3>
+        <h3 className="text-lg font-semibold mb-4">EHR (Electronic Health Record)</h3>
       </div>
     </div>
   );
