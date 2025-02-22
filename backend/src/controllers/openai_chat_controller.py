@@ -13,6 +13,10 @@ def openai_chat_controller(character: str, prompt: str):
         <context>"""
         + f"This is what the patient says: {prompt}."
         + """If the patient discusses highly emotional or sensitive topics, return "RAG" in the type parameter in the output. It will be used later for the RAG(Retrieval Augmented Generation) logic. and "NORAG" otherwise.
+            Response in a json format with the following fields:
+			- script: The generated response.
+			- original_script: The original text provided by the user.
+			- voice: "trump" | "elon" | "ted" (Choose the character based on the user's input)
             These words can be classified as 'RAG': ["die", "sad", "depression", "angry", "kill", "addiction", "divorce", "smoke", "drink", etc]
         </context>"""
         + """
@@ -55,7 +59,7 @@ def openai_chat_controller(character: str, prompt: str):
     result = client.chat.completions.create(
         model="gpt-4o",
         messages=history,
-        response_format="json_object",
+        response_format={"type": "json_object"},
     )
     
     return result.choices[0].message.content
