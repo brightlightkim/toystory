@@ -3,8 +3,8 @@ import json
 from fastapi import HTTPException
 
 class TTSController:
-    def __init__(self, api_key, user_id):
-        self.api_key = api_key
+    def __init__(self, PlayHT_API_KEY, user_id):
+        self.api_key = PlayHT_API_KEY
         self.user_id = user_id
         self.base_url = "https://api.play.ht/api/v1/"
 
