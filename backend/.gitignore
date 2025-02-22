@@ -142,3 +142,6 @@ pip-delete-this-directory.txt
 __pycache__
 .env.development
 .env.production
+# pixi environments
+.pixi
+*.egg-info

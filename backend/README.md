@@ -1,15 +1,13 @@
-# Setup python virtual environment 
+# Installation Guide
 
-# 1. python -m install venv ./venv
+Install pixi. Then, run
 
-# Activate the virtual environment
+```
+pixi install
+```
 
-# 2. source ./venv/bin/activate
+then, source into the workspace with
 
-# Run 
-
-# 3. pip install -r requirements.txt
-
-# Start the server
-
-# 4. uvicorn src.main:app --reload
+```
+pixi shell
+```
