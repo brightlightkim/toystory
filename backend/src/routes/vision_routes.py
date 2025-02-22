@@ -1,8 +1,11 @@
 from fastapi import APIRouter, Response
 import cv2
-from controller.vision_controller import MoodAnalyzer
 
-router = APIRouter()
+import sys
+sys.path.append("..")
+from controllers.vision_controller import MoodAnalyzer
+
+vision_router = APIRouter()
 mood_analyzer = MoodAnalyzer()
 
 def generate_frames():
@@ -23,10 +26,10 @@ def generate_frames():
 
     cap.release()
 
-@router.get("/video_feed")
+@vision_router.get("/video_feed")
 async def video_feed():
     return Response(generate_frames(), media_type="multipart/x-mixed-replace; boundary=frame")
 
-@router.get("/emotion")
+@vision_router.get("/emotion")
 async def get_emotion():
-    return {"emotion": "neutral"}  # Placeholder for real-time emotion detection
+    return {"emotion": "neutral"}  # Placeholder for emotion detection
