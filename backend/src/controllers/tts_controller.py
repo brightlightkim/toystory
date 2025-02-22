@@ -1,10 +1,13 @@
 import requests
 import json
 import os
-import uuid
+import time
+from dotenv import load_dotenv
 
 from supabase import create_client, Client
 from fastapi import HTTPException
+
+load_dotenv()
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
@@ -47,7 +50,7 @@ class TTSController:
 
         if response.status_code == 200:
             # Generate a unique filename
-            filename = f"audio_{uuid.uuid4()}.mp3"
+            filename = f"audio_{int(time.time())}.mp3"
 
             # Save the audio content to a temporary file
             with open(filename, "wb") as f:
