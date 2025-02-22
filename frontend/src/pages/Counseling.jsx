@@ -11,7 +11,7 @@ import HappinessChart from "../components/HappinessChart";
 import elon from "../assets/elon.png";
 import donald from "../assets/donald.png";
 import ted from "../assets/ted.png";
-import ChatMessage from '../components/ChatMessage';
+import ChatMessage from "../components/ChatMessage";
 
 const Counseling = () => {
   const [emotion, setEmotion] = useState("neutral");
@@ -25,7 +25,7 @@ const Counseling = () => {
   const [isMyVideoLarge, setIsMyVideoLarge] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState(ted); // 기본 아바타 설정
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessage, setNewMessage] = useState("");
 
   const avatars = [
     { name: "Ted", img: ted },
@@ -36,12 +36,46 @@ const Counseling = () => {
   // 🌟 데이터 소스 선택 상태 (웹캠 또는 로봇)
   const [dataSource, setDataSource] = useState("robot"); // 'webcam' 또는 'robot'
 
-  // useEffect(() => {
-  //   if (dataSource === "robot") {
-  //     const interval = setInterval(fetchRobotEmotion, 10000); // 로봇 데이터 주기적 GET 요청
-  //     return () => clearInterval(interval);
-  //   }
-  // }, [dataSource]);
+  useEffect(() => {
+    const interval = setInterval(runFinalFunction, 1000); // 로봇 데이터 주기적 GET 요청
+    return () => clearInterval(interval);
+  }, [dataSource]);
+
+  const runFinalFunction = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/final/", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          character: "ted the bear"
+        })
+      });
+      const data = await response.json();
+      if (data.status === 200) {
+        // Add user's transcribed text to chat
+        const userMessage = {
+          role: "user",
+          content: data.transcribed_text
+        };
+
+        // Add robot's response to chat
+        const robotMessage = {
+          role: "assistant",
+          content: data.characterized_response
+        };
+
+        // Update transcription with new messages
+        setTranscription(prev => [...prev, userMessage, robotMessage]);
+
+        // Update counseling response
+        setCounselingResponse(data.characterized_response);
+      }
+    } catch (error) {
+      console.error("Error fetching final function:", error);
+    }
+  };
 
   const fetchRobotEmotion = async () => {
     try {
@@ -87,25 +121,25 @@ const Counseling = () => {
 
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
-    
+
     try {
-      const response = await fetch('http://localhost:8000/chat/send', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8000/chat/send", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          sessionid: '736d02e0-376a-425a-b76d-78967be66ba0',
+          sessionid: "736d02e0-376a-425a-b76d-78967be66ba0",
           message: newMessage,
         }),
       });
-      
+
       if (response.ok) {
-        setNewMessage('');
+        setNewMessage("");
         fetchChatHistory();
       }
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error("Error sending message:", error);
     }
   };
 
@@ -122,8 +156,12 @@ const Counseling = () => {
           onClick={() => setIsLeftPanelOpen(!isLeftPanelOpen)}
           className="absolute right-[-20px] top-1/2 transform -translate-y-1/2 bg-indigo-600 text-white p-2 rounded-full shadow-md z-[101]"
         >
-          {isLeftPanelOpen ? <ChevronLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
-        </button> 
+          {isLeftPanelOpen ? (
+            <ChevronLeft className="w-5 h-5" />
+          ) : (
+            <ChevronRight className="w-5 h-5" />
+          )}
+        </button>
 
         <div className="p-4 bg-white">
           <h3 className="text-lg font-semibold">Chat with Robot</h3>
@@ -135,7 +173,7 @@ const Counseling = () => {
             <ChatMessage
               key={index}
               message={msg.content}
-              isAI={msg.role === 'assistant'}
+              isAI={msg.role === "assistant"}
             />
           ))}
         </div>
@@ -147,7 +185,7 @@ const Counseling = () => {
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
               placeholder="Type your message..."
               className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
@@ -246,8 +284,12 @@ const Counseling = () => {
           )}
         </button>
 
-        <h3 className="text-lg font-semibold mb-4">RAG with Finetuned Embedding Model</h3>
-        <h3 className="text-lg font-semibold mb-4">EHR (Electronic Health Record)</h3>
+        <h3 className="text-lg font-semibold mb-4">
+          RAG with Finetuned Embedding Model
+        </h3>
+        <h3 className="text-lg font-semibold mb-4">
+          EHR (Electronic Health Record)
+        </h3>
       </div>
     </div>
   );

@@ -21,7 +21,6 @@ ultralytics = ">=8.3.78"
 pytorch = ">=2.6.0"
 torchvision = ">=0.21.0"
 httpx = ">=0.26"
-python = "3.11.*"
 
 [pypi-dependencies]
 huggingface-hub = { version = "*", extras = ["cli"] }

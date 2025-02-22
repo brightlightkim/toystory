@@ -9,7 +9,12 @@ from openai import OpenAI
 
 
 sys.path.append("..")
-from controllers import supabase_handler, openai_chat_controller, tts_controller, langchain_rag
+from controllers import (
+    supabase_handler,
+    openai_chat_controller,
+    tts_controller,
+    langchain_rag,
+)
 
 client = OpenAI()
 
@@ -43,17 +48,24 @@ async def final_function(request: FinalRequest) -> Dict[str, Any]:
 
             # Clean up the temporary file
             os.unlink(temp_file_path)
-            transcribed_text = transcription.text
+            # transcribed_text = transcription.text
+            transcribed_text = "I need some help with depression"
 
             print("Transcribed Text:", transcribed_text)
 
-            rag_context = langchain_rag.vector_retrieval(transcribed_text)
+            rag_context = await langchain_rag.vector_retrieval(transcribed_text)
+            
+            print("RAG Context:", rag_context)
 
             characterized_response = openai_chat_controller(
-                context={"name": "Daniel", "emotion": "happy", "rag_context": rag_context}, 
-                prompt=transcribed_text
+                context={
+                    "name": "Daniel",
+                    "emotion": "happy",
+                    "rag_context": rag_context,
+                },
+                prompt=transcribed_text,
             )
-            #TODO: make emotion and name dynamic
+            # TODO: make emotion and name dynamic
 
             print("Characterized Response:", characterized_response)
 
@@ -67,11 +79,10 @@ async def final_function(request: FinalRequest) -> Dict[str, Any]:
             )
 
             return {
-                "status": 200,
                 "transcribed_text": transcribed_text,
                 "characterized_response": characterized_response["script"],
                 "voice": characterized_response["voice"],
             }
-        return {"status": 404, "message": "No new audio found"}
+        return HTTPException(status_code=404, detail="No new audio found")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
