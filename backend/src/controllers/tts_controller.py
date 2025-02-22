@@ -3,9 +3,9 @@ import json
 from fastapi import HTTPException
 
 class TTSController:
-    def __init__(self, PlayHT_API_KEY, user_id):
-        self.api_key = PlayHT_API_KEY
-        self.user_id = user_id
+    def __init__(self, PLAYHT_API_KEY, PLAYHT_USER_ID):
+        self.api_key = PLAYHT_API_KEY
+        self.user_id = PLAYHT_USER_ID
         self.base_url = "https://api.play.ht/api/v1/"
 
     def convert_text_to_speech(self, text, voice):
