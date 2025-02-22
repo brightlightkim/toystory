@@ -27,5 +27,5 @@ def openai_chat(request: PromptRequest):
     )
     return {
         "status": 200,
-        "text": response,
+        "response": response,
     }
