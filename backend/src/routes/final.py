@@ -16,7 +16,9 @@ client = OpenAI()
 
 class FinalRequest(BaseModel):
     character: str
-    voice_repo: Optional[str]="s3://voice-cloning-zero-shot/a9cabd69-695e-48a2-a96d-1f237840c7bc/original/manifest.json"
+    voice_repo: Optional[str] = (
+        "s3://voice-cloning-zero-shot/a9cabd69-695e-48a2-a96d-1f237840c7bc/original/manifest.json"
+    )
 
 
 final_router = APIRouter(prefix="/final")
@@ -42,19 +44,29 @@ async def final_function(request: FinalRequest) -> Dict[str, Any]:
             # Clean up the temporary file
             os.unlink(temp_file_path)
             transcribed_text = transcription.text
-            
-            characterized_response = openai_chat_controller(character=request.character, prompt=transcribed_text)
-            
+
+            print("Transcribed Text:", transcribed_text)
+
+            characterized_response = openai_chat_controller(
+                character=request.character, prompt=transcribed_text
+            )
+
+            print("Characterized Response:", characterized_response)
+
             if not characterized_response:
                 return {"status": 404, "message": "No response generated"}
-            
-            tts_controller.convert_text_to_speech(characterized_response.script, characterized_response.voice)
-            
+
+            tts_class = tts_controller.TTSController()
+
+            tts_class.convert_text_to_speech(
+                characterized_response["script"], request.voice_repo
+            )
+
             return {
                 "status": 200,
                 "transcribed_text": transcribed_text,
-                "characterized_response": characterized_response.script,
-                "voice": characterized_response.voice
+                "characterized_response": characterized_response["script"],
+                "voice": characterized_response["voice"],
             }
         return {"status": 404, "message": "No new audio found"}
     except Exception as e:
