@@ -48,8 +48,8 @@ async def final_function(request: FinalRequest) -> Dict[str, Any]:
 
             # Clean up the temporary file
             os.unlink(temp_file_path)
-            # transcribed_text = transcription.text
-            transcribed_text = "Hi TED How are you?"
+            transcribed_text = transcription.text
+            # transcribed_text = "Hi TED How are you?"
 
             print("Transcribed Text:", transcribed_text)
 
