@@ -1,3 +1,8 @@
+<<<<<<< Updated upstream
+=======
+from fastapi import FastAPI
+from .routes import openai_router, tts_router
+>>>>>>> Stashed changes
 import os
 from fastapi import FastAPI
 from dotenv import load_dotenv
@@ -17,6 +22,11 @@ else:
 app = FastAPI()
 
 app.include_router(openai_router)
+app.include_router(tts_router)
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the Speech-to-Text API"}
 
 # CORS 설정 (React 프론트엔드 연결)
 app.add_middleware(
