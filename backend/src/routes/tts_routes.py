@@ -18,10 +18,7 @@ class TTSRequest(BaseModel):
 
 
 # XOXO -> Our PlayHT API key and user ID
-tts_controller = tts_controller.TTSController(
-    PLAYHT_API_KEY=os.getenv("PLAYHT_API_KEY"),
-    PLAYHT_USER_ID=os.getenv("PLAYHT_USER_ID"),
-)
+tts_controller = tts_controller.TTSController()
 
 
 @tts_router.post("/convert")
