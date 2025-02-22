@@ -9,12 +9,18 @@ from routes.sst import sst_router
 from routes.tts_routes import tts_router  
 # from routes.emotion import emotion_router
 from routes.final import final_router
+from routes.vision_routes import router # imports vision_routes.py
+
 
 # 현재 파일의 디렉토리를 기준으로 상대 경로 설정
 current_dir = os.path.dirname(os.path.abspath(__file__))
 env_path = os.path.join(os.path.dirname(current_dir), '.env')
 
-load_dotenv()
+# .env 파일 로드 시도
+if os.path.exists(env_path):
+    load_dotenv(dotenv_path=env_path)
+else:
+    print(f"Warning: .env file not found at {env_path}")
 
 app = FastAPI()
 
