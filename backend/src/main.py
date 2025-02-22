@@ -12,11 +12,7 @@ from routes.tts_routes import tts_router
 current_dir = os.path.dirname(os.path.abspath(__file__))
 env_path = os.path.join(os.path.dirname(current_dir), '.env')
 
-# .env 파일 로드 시도
-if os.path.exists(env_path):
-    load_dotenv(dotenv_path=env_path)
-else:
-    print(f"Warning: .env file not found at {env_path}")
+load_dotenv()
 
 app = FastAPI()
 
