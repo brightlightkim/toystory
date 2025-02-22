@@ -9,7 +9,7 @@ from openai import OpenAI
 
 
 sys.path.append("..")
-from controllers import supabase_handler, openai_chat_controller, tts_controller
+from controllers import supabase_handler, openai_chat_controller, tts_controller, langchain_rag
 
 client = OpenAI()
 
@@ -47,9 +47,13 @@ async def final_function(request: FinalRequest) -> Dict[str, Any]:
 
             print("Transcribed Text:", transcribed_text)
 
+            rag_context = langchain_rag.vector_retrieval(transcribed_text)
+
             characterized_response = openai_chat_controller(
-                character=request.character, prompt=transcribed_text
+                context={"name": "Daniel", "emotion": "happy", "rag_context": rag_context}, 
+                prompt=transcribed_text
             )
+            #TODO: make emotion and name dynamic
 
             print("Characterized Response:", characterized_response)
 
