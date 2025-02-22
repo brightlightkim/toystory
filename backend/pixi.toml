@@ -26,4 +26,3 @@ gotrue = "==2.8.0"
 
 [pypi-dependencies]
 huggingface-hub = { version = "*", extras = ["cli"] }
-supabase = ">=2.13.0, <3"
