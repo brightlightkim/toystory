@@ -918,8 +918,6 @@ packages:
   - ucrt >=10.0.20348.0
   - vc >=14.2,<15
   - vc14_runtime >=14.29.30139
-  arch: x86_64
-  platform: win
   license: MIT
   license_family: MIT
   size: 193862
@@ -1876,8 +1874,6 @@ packages:
   - libzlib >=1.3.1,<2.0a0
   - python >=3.13,<3.14.0a0
   - python_abi 3.13.* *_cp313
-  arch: x86_64
-  platform: osx
   license: Apache-2.0
   license_family: APACHE
   size: 836489
@@ -1893,8 +1889,6 @@ packages:
   - python >=3.13,<3.14.0a0
   - python >=3.13,<3.14.0a0 *_cp313
   - python_abi 3.13.* *_cp313
-  arch: arm64
-  platform: osx
   license: Apache-2.0
   license_family: APACHE
   size: 824493
@@ -1910,8 +1904,6 @@ packages:
   - ucrt >=10.0.20348.0
   - vc >=14.2,<15
   - vc14_runtime >=14.29.30139
-  arch: x86_64
-  platform: win
   license: Apache-2.0
   license_family: APACHE
   size: 736113
@@ -3058,8 +3050,6 @@ packages:
   - re2
   constrains:
   - grpc-cpp =1.67.1
-  arch: x86_64
-  platform: osx
   license: Apache-2.0
   license_family: APACHE
   size: 5448968
@@ -3080,8 +3070,6 @@ packages:
   - re2
   constrains:
   - grpc-cpp =1.67.1
-  arch: arm64
-  platform: osx
   license: Apache-2.0
   license_family: APACHE
   size: 5311706
@@ -3103,8 +3091,6 @@ packages:
   - vc14_runtime >=14.29.30139
   constrains:
   - grpc-cpp =1.67.1
-  arch: x86_64
-  platform: win
   license: Apache-2.0
   license_family: APACHE
   size: 17282979
@@ -4025,8 +4011,6 @@ packages:
   - libcxx >=18
   constrains:
   - re2 2024.07.02.*
-  arch: x86_64
-  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   size: 179212
@@ -4041,8 +4025,6 @@ packages:
   - libcxx >=18
   constrains:
   - re2 2024.07.02.*
-  arch: arm64
-  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   size: 167155
@@ -4058,8 +4040,6 @@ packages:
   - vc14_runtime >=14.29.30139
   constrains:
   - re2 2024.07.02.*
-  arch: x86_64
-  platform: win
   license: BSD-3-Clause
   license_family: BSD
   size: 260655
@@ -4992,8 +4972,6 @@ packages:
   - python_abi 3.13.* *_cp313
   constrains:
   - libprotobuf 5.28.3
-  arch: x86_64
-  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   size: 460954
@@ -5009,8 +4987,6 @@ packages:
   - python_abi 3.13.* *_cp313
   constrains:
   - libprotobuf 5.28.3
-  arch: arm64
-  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   size: 456638
@@ -5026,8 +5002,6 @@ packages:
   - vc14_runtime >=14.29.30139
   constrains:
   - libprotobuf 5.28.3
-  arch: x86_64
-  platform: win
   license: BSD-3-Clause
   license_family: BSD
   size: 459537
@@ -5474,8 +5448,6 @@ packages:
   md5: 5fd6022c97d78c252f1cc8d7433e97d0
   depends:
   - libre2-11 2024.07.02 h0e468a2_2
-  arch: x86_64
-  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   size: 26920
@@ -5485,8 +5457,6 @@ packages:
   md5: 7a8b4ad8c58a3408ca89d78788c78178
   depends:
   - libre2-11 2024.07.02 h07bc746_2
-  arch: arm64
-  platform: osx
   license: BSD-3-Clause
   license_family: BSD
   size: 26861
@@ -5496,8 +5466,6 @@ packages:
   md5: 10980cbe103147435a40288db9f49847
   depends:
   - libre2-11 2024.07.02 h4eb7d71_2
-  arch: x86_64
-  platform: win
   license: BSD-3-Clause
   license_family: BSD
   size: 214916
