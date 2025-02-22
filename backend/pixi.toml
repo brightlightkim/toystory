@@ -16,9 +16,5 @@ supabase = ">=2.6.0,<3"
 langchain = ">=0.3.17,<0.4"
 langchain-google-genai = ">=2.0.10,<3"
 python-dotenv = ">=1.0.1,<2"
-<<<<<<< Updated upstream
 boto3 = ">=1.36.25,<2"
 openai = ">=1.63.2"
-=======
-boto3 = ">=1.36.25,<2"
->>>>>>> Stashed changes
