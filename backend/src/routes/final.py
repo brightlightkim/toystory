@@ -24,7 +24,7 @@ class TranscribeRequest(BaseModel):
 final_router = APIRouter(prefix="/final")
 
 
-@final_router.get("/")
+@final_router.post("/")
 async def final_function(character: str, voice_repo: str='') -> Dict[str, Any]:
     try:
         latest_audio = await supabase_handler.fetch_latest_user_audio_from_supabase()
