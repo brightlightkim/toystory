@@ -102,7 +102,7 @@ const Counseling = () => {
       
       if (response.ok) {
         setNewMessage('');
-        // Chat history will be updated automatically by the existing fetchChatHistory interval
+        fetchChatHistory();
       }
     } catch (error) {
       console.error('Error sending message:', error);
