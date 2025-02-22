@@ -11,3 +11,9 @@ then, source into the workspace with
 ```
 pixi shell
 ```
+
+How to begin the fastapi server:
+
+```
+uvicorn main:app --reload
+```
