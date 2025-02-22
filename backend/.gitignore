@@ -1,0 +1,13 @@
+.env.development
+.env.production
+__pycache__
+wav2lip_gan.pth
+wav2lip.pth
+
+.env
+
+# env files
+.env.local
+.env.development.local
+
+.env
