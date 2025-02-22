@@ -3,7 +3,7 @@ authors = ["menamerai <rphananh@gmail.com>"]
 channels = ["conda-forge"]
 description = "Add a short description here"
 name = "backend"
-platforms = ["win-64", "osx-64", "osx-arm64"]
+platforms = ["linux-64", "osx-64", "osx-arm64"]
 version = "0.1.0"
 
 [tasks]
