@@ -17,8 +17,6 @@ class TTSController:
             "content-type": "application/json"
         }
 
-        print("Headers", headers)
-
         data = {
             "text": text,
             "voice": voice,
@@ -26,13 +24,10 @@ class TTSController:
             "voice_engine": "PlayDialog",
         }
 
-        print("Data", data)
-
         response = requests.post(f"{self.base_url}tts/stream", headers=headers, data=json.dumps(data))
 
-        print("Response", response.text)
-
         if response.status_code != 200:
+            print(response.json())
             raise HTTPException(status_code=response.status_code, detail="Failed to convert text to speech")
 
         return response.content  # Return binary audio content instead of JSON

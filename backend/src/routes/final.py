@@ -49,7 +49,7 @@ async def final_function(request: FinalRequest) -> Dict[str, Any]:
             # Clean up the temporary file
             os.unlink(temp_file_path)
             # transcribed_text = transcription.text
-            transcribed_text = "I need some help with depression"
+            transcribed_text = "Hi TED How are you?"
 
             print("Transcribed Text:", transcribed_text)
 
@@ -75,13 +75,12 @@ async def final_function(request: FinalRequest) -> Dict[str, Any]:
             tts_class = tts_controller.TTSController()
 
             tts_class.convert_text_to_speech(
-                characterized_response["script"], request.voice_repo
+                characterized_response, request.voice_repo
             )
 
             return {
                 "transcribed_text": transcribed_text,
-                "characterized_response": characterized_response["script"],
-                "voice": characterized_response["voice"],
+                "characterized_response": characterized_response
             }
         return HTTPException(status_code=404, detail="No new audio found")
     except Exception as e:
