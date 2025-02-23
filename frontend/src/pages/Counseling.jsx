@@ -239,6 +239,10 @@ const Counseling = () => {
           className="w-full h-96 object-cover rounded-2xl shadow-lg mb-6"
         />
 
+        <h3 className="text-2xl font-bold text-center mb-2 text-indigo-600">
+          Electronic Health Record (EHR)
+        </h3>
+
         <div className="grid grid-cols-2 gap-6">
           {Object.entries(healthRecord).map(([category, items]) => (
             <div
