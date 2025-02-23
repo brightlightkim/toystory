@@ -86,7 +86,8 @@ async def final_function(request: FinalRequest) -> Dict[str, Any]:
 
             return {
                 "transcribed_text": transcribed_text,
-                "characterized_response": characterized_response
+                "characterized_response": characterized_response,
+                "rag_context": rag_context,
             }
         return HTTPException(status_code=404, detail="No new audio found")
     except Exception as e:
