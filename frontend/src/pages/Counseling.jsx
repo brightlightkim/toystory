@@ -1,12 +1,4 @@
 import { useState, useEffect } from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Maximize,
-  Minimize,
-  ChevronDown,
-} from "lucide-react";
-import VideoCapture from "../components/VideoCapture";
 import HappinessChart from "../components/HappinessChart";
 import elon from "../assets/elon.png";
 import donald from "../assets/donald.png";
@@ -20,10 +12,6 @@ const Counseling = () => {
     "Hello! How can I assist you today?"
   );
   const [transcription, setTranscription] = useState([]);
-  const [isLeftPanelOpen, setIsLeftPanelOpen] = useState(false);
-  const [isRightPanelOpen, setIsRightPanelOpen] = useState(false);
-  const [isMyVideoLarge, setIsMyVideoLarge] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [newMessage, setNewMessage] = useState("");
 
   const avatars = [
@@ -146,12 +134,11 @@ const Counseling = () => {
     <div className="relative flex h-screen overflow-hidden">
       {/* Chat Section */}
       <div
-        className={`flex-1 h-full bg-gray-100 shadow-md transition-transform transform translate-x-0 flex flex-col`}
+        className={`flex-1 h-full bg-gray-100 shadow-md flex flex-col justify-between`}
       >
         {/* Chat Messages */}
         <div
           className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50"
-          style={{ maxHeight: "calc(100vh - 180px)" }}
         >
           {transcription.map((msg, index) => (
             <ChatMessage
@@ -163,7 +150,7 @@ const Counseling = () => {
         </div>
 
         {/* Chat Input - removed margin/padding bottom */}
-        <div className="sticky bottom-0 border-t bg-white shadow-up">
+        <div className="border-t bg-white shadow-up">
           <div className="flex space-x-2 p-3">
             {" "}
             {/* Reduced padding */}
@@ -182,6 +169,7 @@ const Counseling = () => {
             </button>
           </div>
         </div>
+        <div className="h-16 bg-white"></div>
       </div>
 
       {/* Main Content */}
