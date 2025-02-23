@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 sys.path.append("..")
-from controllers import openai_ehr_controller, tts_controller, openai_checklist_controller
+from controllers import openai_ehr_controller, tts_controller, openai_checklist_controller, openai_detection_controller
 
 class EHRRequest(BaseModel):
     query: str
@@ -16,6 +16,9 @@ class EHRRequest(BaseModel):
 
 class EHRCheckRequest(BaseModel):
     checklist: List[str]
+    conversation: str
+
+class EHRDetectionRequest(BaseModel):
     conversation: str
 
 ehr_router = APIRouter(prefix="/ehr")
@@ -48,6 +51,20 @@ async def ehr_check(request: EHRCheckRequest) -> Dict[str, Any]:
         conversation = request.conversation
 
         response = openai_checklist_controller(conversation, checklist)
+
+        print("Response:", response)
+
+        return {"status": 200, "response": response}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@ehr_router.post("/detection")
+async def ehr_detection(request: EHRDetectionRequest) -> Dict[str, Any]:
+    try:
+        conversation = request.conversation
+
+        response = openai_detection_controller(conversation)
 
         print("Response:", response)
 

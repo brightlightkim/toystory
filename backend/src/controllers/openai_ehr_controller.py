@@ -6,7 +6,7 @@ def openai_ehr_controller(context: dict, query: str):
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     system_prompt = ''
-    with open("backend/src/templates/ehr_prompt.txt", "r") as file:
+    with open("../src/templates/ehr_prompt.txt", "r") as file:
         system_prompt = file.read()
 
     system_prompt = system_prompt.format(
