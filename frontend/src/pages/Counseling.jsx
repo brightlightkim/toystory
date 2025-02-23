@@ -76,12 +76,13 @@ const Counseling = () => {
       });
 
       if (response.ok) {
+        const data = await response.json();
         setTranscription((prev) => [
           ...prev,
           { role: "user", content: newMessage },
           {
             role: "assistant",
-            content: response.json().characterized_response,
+            content: data.characterized_response,
           },
         ]);
 
