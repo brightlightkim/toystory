@@ -36,6 +36,7 @@ async def final_function(request: FinalRequest) -> Dict[str, Any]:
         if request.text_input:
             transcribed_text = request.text_input
             rag_context = await langchain_rag.vector_retrieval(transcribed_text)
+            print("RAG Context:", rag_context)
             characterized_response = openai_chat_controller(
                 context={
                     "name": "Daniel",
@@ -44,6 +45,8 @@ async def final_function(request: FinalRequest) -> Dict[str, Any]:
                 },
                 prompt=transcribed_text,
             )
+            
+            print("Characterized Response:", characterized_response)
 
             if not characterized_response:
                 return {"status": 404, "message": "No response generated"}
@@ -55,8 +58,12 @@ async def final_function(request: FinalRequest) -> Dict[str, Any]:
             }
 
             tts_class = tts_controller.TTSController()
+            
+            print("Voice Repo:", request.voice_repo)
 
             tts_class.convert_text_to_speech(characterized_response, request.voice_repo)
+            
+            print("Characterized Response:", characterized_response)
 
             return {
                 "transcribed_text": transcribed_text,

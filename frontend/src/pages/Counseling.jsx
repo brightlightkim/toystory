@@ -8,9 +8,6 @@ import ChatMessage from "../components/ChatMessage";
 const Counseling = () => {
   const [emotion, setEmotion] = useState("neutral");
   const [happinessScore, setHappinessScore] = useState(0); // 행복지수 추가
-  const [counselingResponse, setCounselingResponse] = useState(
-    "Hello! How can I assist you today?"
-  );
   const [transcription, setTranscription] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
@@ -39,7 +36,9 @@ const Counseling = () => {
           character: "ted the bear",
         }),
       });
+
       const data = await response.json();
+
       if (data.status === 200) {
         // Add user's transcribed text to chat
         const userMessage = {
@@ -55,26 +54,9 @@ const Counseling = () => {
 
         // Update transcription with new messages
         setTranscription((prev) => [...prev, userMessage, robotMessage]);
-
-        // Update counseling response
-        setCounselingResponse(data.characterized_response);
       }
     } catch (error) {
       console.error("Error fetching final function:", error);
-    }
-  };
-
-  const fetchRobotEmotion = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost:8000/emotion/analyze_robot/"
-      );
-      const data = await response.json();
-      // console.log(data);
-      setEmotion(data.emotion.dominant_emotion);
-      setHappinessScore(data.happiness_score);
-    } catch (error) {
-      console.error("Error fetching robot emotion:", error);
     }
   };
 
@@ -89,7 +71,7 @@ const Counseling = () => {
         },
         body: JSON.stringify({
           character: "ted the bear",
-          text_input: newMessage,
+          text_input: newMessage.length > 0 ? newMessage : null,
         }),
       });
 
