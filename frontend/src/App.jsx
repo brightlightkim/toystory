@@ -15,7 +15,6 @@ function App() {
             <Route path="/counseling" element={<Counseling />} />
           </Routes>
         </main>
-        <Footer />
       </div>
     </Router>
   );
