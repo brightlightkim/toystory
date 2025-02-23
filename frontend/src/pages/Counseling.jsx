@@ -128,8 +128,10 @@ const Counseling = () => {
         // Update transcription with new messages
         setTranscription((prev) => [...prev, userMessage, robotMessage]);
         setMostRecentUserMessage(data.transcribed_text);
+        if (data.rag_context) {
+          setRagDocuments(data.rag_context);
+        }
         runEhrFunction();
-        setRagDocuments(data.rag_context);
       }
     } catch (error) {
       console.error("Error fetching final function:", error);
@@ -161,7 +163,9 @@ const Counseling = () => {
             content: data.characterized_response,
           },
         ]);
-        setRagDocuments(data.rag_context);
+        if (data.rag_context) {
+          setRagDocuments(data.rag_context);
+        }
         setMostRecentUserMessage(newMessage);
         runEhrFunction();
         setNewMessage("");
@@ -237,17 +241,27 @@ const Counseling = () => {
 
         <div className="grid grid-cols-2 gap-6">
           {Object.entries(healthRecord).map(([category, items]) => (
-            <div key={category} className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all">
+            <div
+              key={category}
+              className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all"
+            >
               <h4 className="text-xl font-bold mb-4 text-indigo-600 capitalize">
                 {category.replace(/([A-Z])/g, " $1").trim()}
               </h4>
               <div className="space-y-3">
                 {Object.entries(items).map(([item, value]) => (
-                  <div key={item} className="flex items-center justify-between py-1">
+                  <div
+                    key={item}
+                    className="flex items-center justify-between py-1"
+                  >
                     <span className="text-sm text-gray-700 capitalize">
                       {item.replace(/([A-Z])/g, " $1").trim()}
                     </span>
-                    <span className={`text-sm font-medium ${value ? "text-emerald-500" : "text-rose-500"}`}>
+                    <span
+                      className={`text-sm font-medium ${
+                        value ? "text-emerald-500" : "text-rose-500"
+                      }`}
+                    >
                       {value ? "✓" : "✗"}
                     </span>
                   </div>
@@ -272,11 +286,19 @@ const Counseling = () => {
             <div
               key={index}
               className={`bg-white rounded-xl p-6 transition-all hover:shadow-lg
-                ${index === 0 ? "border-2 border-indigo-500 shadow-md" : "shadow-sm"}`}
+                ${
+                  index === 0
+                    ? "border-2 border-indigo-500 shadow-md"
+                    : "shadow-sm"
+                }`}
             >
               <div className="flex items-center justify-between mb-4">
                 <span className="text-lg font-semibold text-indigo-600">
-                  {index === 0 ? "🥇 Most Relevant" : index === 1 ? "🥈 Second Most Relevant" : "🥉 Third Most Relevant"}
+                  {index === 0
+                    ? "🥇 Most Relevant"
+                    : index === 1
+                    ? "🥈 Second Most Relevant"
+                    : "🥉 Third Most Relevant"}
                 </span>
                 <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
                   Score: {doc.score.toFixed(2)}
