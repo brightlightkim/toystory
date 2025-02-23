@@ -9,12 +9,12 @@ pip install -r requirements.txt
 
 2. Run the server:
 ```bash
-gunicorn main:app
+gunicorn main:app 127.0.0.1:8080
 ```
 
 3. Test with an image (in new terminal):
 ```bash
-curl -X POST http://127.0.0.1:8000/process_image -F "image=@test.jpg"
+curl -X POST http://127.0.0.1:8080/process_image -F "image=@test.jpg"
 ```
 
 ## Note

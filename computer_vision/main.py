@@ -10,7 +10,7 @@
 
     [for testing purposes] to input the image, use the following code in new terminal: 
     
-    curl -X POST http://127.0.0.1:8000/process_image \ -F "image=@test.jpg"
+    curl -X POST http://127.0.0.1:8080/process_image \ -F "image=@test.jpg"
 
     [make sure to have the image in the same directory]
 
