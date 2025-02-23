@@ -44,30 +44,30 @@ const Counseling = () => {
   const runFinalFunction = async () => {
     try {
       const response = await fetch("http://localhost:8000/final/", {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          character: "ted the bear"
-        })
+          character: "ted the bear",
+        }),
       });
       const data = await response.json();
       if (data.status === 200) {
         // Add user's transcribed text to chat
         const userMessage = {
           role: "user",
-          content: data.transcribed_text
+          content: data.transcribed_text,
         };
 
         // Add robot's response to chat
         const robotMessage = {
           role: "assistant",
-          content: data.characterized_response
+          content: data.characterized_response,
         };
 
         // Update transcription with new messages
-        setTranscription(prev => [...prev, userMessage, robotMessage]);
+        setTranscription((prev) => [...prev, userMessage, robotMessage]);
 
         // Update counseling response
         setCounselingResponse(data.characterized_response);
@@ -145,56 +145,41 @@ const Counseling = () => {
 
   return (
     <div className="relative flex h-screen overflow-hidden">
-      {/* Left Sliding Panel (Chat) */}
-      <div
-        className={`fixed z-[100] left-0 top-0 h-full bg-gray-100 shadow-md transition-transform transform ${
-          isLeftPanelOpen ? "translate-x-0" : "-translate-x-full"
-        } w-1/4 flex flex-col`}
-      >
-        {/* Panel Toggle Button */}
-        <button
-          onClick={() => setIsLeftPanelOpen(!isLeftPanelOpen)}
-          className="absolute right-[-20px] top-1/2 transform -translate-y-1/2 bg-indigo-600 text-white p-2 rounded-full shadow-md z-[101]"
-        >
-          {isLeftPanelOpen ? (
-            <ChevronLeft className="w-5 h-5" />
-          ) : (
-            <ChevronRight className="w-5 h-5" />
-          )}
-        </button>
+      <div className="flex-1 left-0 top-0 h-full bg-gray-100 shadow-md">
+        <div>
+          <div className="p-4 bg-white">
+            <h3 className="text-lg font-semibold">Chat with Robot</h3>
+          </div>
 
-        <div className="p-4 bg-white">
-          <h3 className="text-lg font-semibold">Chat with Robot</h3>
-        </div>
+          {/* Chat Messages */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+            {transcription.map((msg, index) => (
+              <ChatMessage
+                key={index}
+                message={msg.content}
+                isAI={msg.role === "assistant"}
+              />
+            ))}
+          </div>
 
-        {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
-          {transcription.map((msg, index) => (
-            <ChatMessage
-              key={index}
-              message={msg.content}
-              isAI={msg.role === "assistant"}
-            />
-          ))}
-        </div>
-
-        {/* Chat Input - Fixed at bottom */}
-        <div className="p-4 border-t bg-white shadow-up">
-          <div className="flex space-x-2">
-            <input
-              type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-              placeholder="Type your message..."
-              className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            <button
-              onClick={handleSendMessage}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-            >
-              Send
-            </button>
+          {/* Chat Input - Fixed at bottom */}
+          <div className="p-4 border-t bg-white shadow-up">
+            <div className="flex space-x-2">
+              <input
+                type="text"
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+                placeholder="Type your message..."
+                className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              <button
+                onClick={handleSendMessage}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                Send
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -204,23 +189,6 @@ const Counseling = () => {
         {/* Main Counseling UI */}
         <div className="flex flex-col justify-center items-center bg-white p-8 min-h-screen">
           <h2 className="text-xl font-semibold mb-4">AI Counseling Session</h2>
-
-          {/* 🌟 비디오 컴포넌트: 웹캠만 표시
-          {dataSource === "webcam" && (
-            <div className=" bg-gray-800 border-2 border-white shadow-lg rounded-lg transition-all duration-300 w-96">
-              <VideoCapture />
-              <button
-                onClick={() => setIsMyVideoLarge(!isMyVideoLarge)}
-                className="absolute top-2 right-2 bg-white text-gray-800 p-1 rounded-full shadow-md"
-              >
-                {isMyVideoLarge ? (
-                  <Minimize className="w-5 h-5" />
-                ) : (
-                  <Maximize className="w-5 h-5" />
-                )}
-              </button>
-            </div>
-          )} */}
 
           {/* Avatar Dropdown */}
           <div className="absolute top-16 right-16">
@@ -259,36 +227,20 @@ const Counseling = () => {
               </div>
             )}
           </div>
-
-          {/* 행복지수 그래프 */}
-          <div className="mt-6 w-full flex justify-center">
-            <HappinessChart dataSource={dataSource} />
-          </div>
         </div>
-      </div>
 
-      {/* Right Sliding Panel */}
-      <div
-        className={`absolute z-50 right-0 top-0 h-full bg-gray-100 shadow-md p-4 transition-transform transform ${
-          isRightPanelOpen ? "translate-x-0" : "translate-x-full"
-        } w-1/4`}
-      >
-        <button
-          onClick={() => setIsRightPanelOpen(!isRightPanelOpen)}
-          className="absolute left-[-20px] top-1/2 transform -translate-y-1/2 bg-indigo-600 text-white p-2 rounded-full shadow-md"
-        >
-          {isRightPanelOpen ? (
-            <ChevronRight className="w-5 h-5" />
-          ) : (
-            <ChevronLeft className="w-5 h-5" />
-          )}
-        </button>
+        <h3 className="text-lg font-semibold mb-4">
+          EHR (Electronic Health Record)
+        </h3>
+      </div>
+      <div className="flex-1 ml-0">
+        {/* 행복지수 그래프 */}
+        <div className="mt-6 w-full flex justify-center">
+          <HappinessChart dataSource={dataSource} />
+        </div>
 
         <h3 className="text-lg font-semibold mb-4">
           RAG with Finetuned Embedding Model
-        </h3>
-        <h3 className="text-lg font-semibold mb-4">
-          EHR (Electronic Health Record)
         </h3>
       </div>
     </div>
