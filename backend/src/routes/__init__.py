@@ -4,6 +4,7 @@ from .emotion import emotion_router
 from .sst import sst_router
 from .final import final_router
 from .image import image_router
+from .ehr import ehr_router
 
 __all__ = [
     "openai_router",
@@ -12,4 +13,5 @@ __all__ = [
     "tts_router",
     "final_router",
     "image_router",
+    "ehr_router",
 ]

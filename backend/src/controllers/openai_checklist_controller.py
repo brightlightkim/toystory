@@ -1,6 +1,9 @@
 from openai import OpenAI
 import os
 import json
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def openai_checklist_controller(conversation: str, health_record: dict) -> dict:
@@ -31,16 +34,29 @@ def openai_checklist_controller(conversation: str, health_record: dict) -> dict:
 
     history = [
         {"role": "system", "content": system_prompt},
-        {"role": "user", "content": f"Conversation: {conversation}\nChecklist: {checklist}\nResult:"},
+        {
+            "role": "user",
+            "content": f"Conversation: {conversation}\nChecklist: {checklist}\nResult:",
+        },
     ]
 
     for _ in range(3):
         result = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4o",
             messages=history,
         )
 
         response_content = result.choices[0].message.content
+        
+        # Remove markdown code block indicators if present
+        response_content = response_content.strip()
+        if response_content.startswith('```json'):
+            response_content = response_content[7:]
+        if response_content.startswith('```'):
+            response_content = response_content[3:]
+        if response_content.endswith('```'):
+            response_content = response_content[:-3]
+        response_content = response_content.strip()
 
         try:
             response_json = json.loads(response_content)
@@ -48,12 +64,20 @@ def openai_checklist_controller(conversation: str, health_record: dict) -> dict:
                 for category, conditions in health_record.items():
                     for condition in conditions:
                         if condition in response_json:
-                            health_record[category][condition] = response_json[condition]
+                            health_record[category][condition] = response_json[
+                                condition
+                            ]
                 return health_record
         except json.JSONDecodeError:
+            print("Invalid JSON format")
             pass
 
         history.append({"role": "assistant", "content": response_content})
-        history.append({"role": "user", "content": "Please provide the result in the correct JSON format."})
+        history.append(
+            {
+                "role": "user",
+                "content": "Please provide the result in the correct JSON format.",
+            }
+        )
 
     return health_record
