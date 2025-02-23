@@ -73,26 +73,34 @@ def draw_vectors(image, points, indices):
 
 class ProcessImage(Resource):
     def post(self):
-        if 'image' not in request.files:
-            return jsonify({"error": "No image file provided"}), 400
+        # Check if URL is provided
+        image_url = request.json.get('image_url')
+        
+        if not image_url:
+            return jsonify({"error": "No image URL provided"}), 400
             
-        file = request.files['image']
-        image_np = np.frombuffer(file.read(), np.uint8)
-        image = cv2.imdecode(image_np, cv2.IMREAD_COLOR)
-        
-        if image is None:
-            return jsonify({"error": "Invalid image file"}), 400
-
-        rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  
-        emotion_numeric = mood_analyzer.analyze_emotions(image)
-        
         try:
+            # Fetch image from URL
+            response = requests.get(image_url)
+            if response.status_code != 200:
+                return jsonify({"error": "Failed to retrieve image from URL"}), 400
+            
+            # Convert image content to numpy array
+            image_np = np.frombuffer(response.content, np.uint8)
+            image = cv2.imdecode(image_np, cv2.IMREAD_COLOR)
+            
+            if image is None:
+                return jsonify({"error": "Invalid image file"}), 400
+
+            # Rest of your processing code remains the same
+            rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            emotion_numeric = mood_analyzer.analyze_emotions(image)
+            
             results = face_mesh.process(rgb_image) if emotion_numeric != 0 else None
             
             if results and results.multi_face_landmarks:
                 for face_landmarks in results.multi_face_landmarks:
                     points = []
-                    
                     for landmark in face_landmarks.landmark:
                         x = int(landmark.x * image.shape[1])
                         y = int(landmark.y * image.shape[0])
@@ -103,17 +111,15 @@ class ProcessImage(Resource):
                     draw_vectors(image, points, LIP_INDICES)
                     draw_vectors(image, points, FACE_EDGES)
             
-            # saved_filepath = save_processed_image(image)
-            
+            # Encode image to base64
             _, buffer = cv2.imencode('.jpg', image)
             image_base64 = base64.b64encode(buffer).decode('utf-8')
             
             return jsonify({
                 "emotion_numeric": emotion_numeric,
                 "image_base64": image_base64
-              # ,"saved_filepath": saved_filepath
             })
-            
+
         except Exception as e:
             return jsonify({"error": f"Error processing image: {str(e)}"}), 500
 
