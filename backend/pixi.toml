@@ -9,6 +9,7 @@ version = "0.1.0"
 [tasks]
 
 [dependencies]
+python = "3.10.*"
 fastapi = ">=0.115.8,<0.116"
 google-genai = ">=1.0.0,<2"
 opencv = ">=4.11.0,<5"
@@ -23,7 +24,10 @@ pytorch = ">=2.6.0"
 torchvision = ">=0.21.0"
 httpx = ">=0.24.0"
 gotrue = "==2.8.0"
+protobuf = "5.28.3.*"
+langchain-community = ">=0.3.18,<0.4"
 
 [pypi-dependencies]
 huggingface-hub = { version = "*", extras = ["cli"] }
-supabase = ">=2.13.0, <3"
+protobuf = "==5.28.3"
+

@@ -9,7 +9,7 @@ pixi install
 The deepface library is not found, so we are using:
 
 ```
-pip install deepface
+
 ```
 
 then, source into the workspace with

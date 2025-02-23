@@ -28,7 +28,7 @@ app.include_router(openai_router)
 app.include_router(sst_router)
 app.include_router(tts_router)
 app.include_router(final_router)
-app.include_router(vision_router)
+app.include_router(vision_router)       # Include vision_router
 
 # CORS 설정 (React 프론트엔드 연결)
 app.add_middleware(
