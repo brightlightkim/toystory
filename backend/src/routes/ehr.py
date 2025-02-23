@@ -15,7 +15,7 @@ class EHRRequest(BaseModel):
     )
 
 class EHRCheckRequest(BaseModel):
-    checklist: List[str]
+    checklist: dict
     conversation: str
 
 class EHRDetectionRequest(BaseModel):

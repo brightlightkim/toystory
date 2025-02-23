@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routes.openai import openai_router
 from routes.sst import sst_router
 from routes.tts_routes import tts_router  
-# from routes.emotion import emotion_router
+from routes.ehr import ehr_router
 from routes.final import final_router
 from routes.image import image_router
 
@@ -27,6 +27,7 @@ app = FastAPI()
 app.include_router(openai_router)
 app.include_router(sst_router)
 app.include_router(tts_router)
+app.include_router(ehr_router)
 app.include_router(final_router)
 app.include_router(image_router)
 

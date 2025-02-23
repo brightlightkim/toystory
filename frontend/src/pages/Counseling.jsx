@@ -6,9 +6,8 @@ import ted from "../assets/ted.png";
 import ChatMessage from "../components/ChatMessage";
 
 const Counseling = () => {
-  const [emotion, setEmotion] = useState("neutral");
-  const [happinessScore, setHappinessScore] = useState(0); // 행복지수 추가
   const [mostRecentImage, setMostRecentImage] = useState(null);
+  const [mostRecentUserMessage, setMostRecentUserMessage] = useState("");
   const [transcription, setTranscription] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [ragDocuments, setRagDocuments] = useState([]);
@@ -76,6 +75,29 @@ const Counseling = () => {
   //   return () => clearInterval(interval);
   // }, [dataSource]);
 
+  const runEhrFunction = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/ehr/check", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          checklist: healthRecord,
+          conversation: mostRecentUserMessage,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.status === 200) {
+        setHealthRecord(data.response);
+      }
+    } catch (error) {
+      console.error("Error fetching EHR function:", error);
+    }
+  };
+
   const runFinalFunction = async () => {
     try {
       const response = await fetch("http://localhost:8000/final/", {
@@ -105,6 +127,8 @@ const Counseling = () => {
 
         // Update transcription with new messages
         setTranscription((prev) => [...prev, userMessage, robotMessage]);
+        setMostRecentUserMessage(data.transcribed_text);
+        runEhrFunction();
         setRagDocuments(data.rag_context);
       }
     } catch (error) {
@@ -138,6 +162,8 @@ const Counseling = () => {
           },
         ]);
         setRagDocuments(data.rag_context);
+        setMostRecentUserMessage(newMessage);
+        runEhrFunction();
         setNewMessage("");
       }
     } catch (error) {
@@ -234,9 +260,9 @@ const Counseling = () => {
 
       {/* RAG Section */}
       <div className="flex-1 h-screen overflow-y-auto bg-gray-50 px-6 pt-4">
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <HappinessChart dataSource={dataSource} />
-        </div>
+        </div> */}
 
         <h3 className="text-2xl font-bold text-center mb-2 text-indigo-600">
           Top 3 Most Relevant Documents
