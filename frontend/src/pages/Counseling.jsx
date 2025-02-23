@@ -67,13 +67,10 @@ const Counseling = () => {
     { name: "Elon", img: elon },
   ];
 
-  // 🌟 데이터 소스 선택 상태 (웹캠 또는 로봇)
-  const [dataSource, setDataSource] = useState("robot"); // 'webcam' 또는 'robot'
-
-  // useEffect(() => {
-  //   const interval = setInterval(runFinalFunction, 1000); // 로봇 데이터 주기적 GET 요청
-  //   return () => clearInterval(interval);
-  // }, [dataSource]);
+  useEffect(() => {
+    const interval = setInterval(runFinalFunction, 1000); // 로봇 데이터 주기적 GET 요청
+    return () => clearInterval(interval);
+  });
 
   const runEhrFunction = async () => {
     try {
@@ -110,28 +107,31 @@ const Counseling = () => {
         }),
       });
 
-      const data = await response.json();
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
 
-      if (data.status === 200) {
-        // Add user's transcribed text to chat
-        const userMessage = {
-          role: "user",
-          content: data.transcribed_text,
-        };
+        if (data.transcribed_text != null) {
+          // Add user's transcribed text to chat
+          const userMessage = {
+            role: "user",
+            content: data.transcribed_text,
+          };
 
-        // Add robot's response to chat
-        const robotMessage = {
-          role: "assistant",
-          content: data.characterized_response,
-        };
+          // Add robot's response to chat
+          const robotMessage = {
+            role: "assistant",
+            content: data.characterized_response,
+          };
 
-        // Update transcription with new messages
-        setTranscription((prev) => [...prev, userMessage, robotMessage]);
-        setMostRecentUserMessage(data.transcribed_text);
-        if (data.rag_context) {
-          setRagDocuments(data.rag_context);
+          // Update transcription with new messages
+          setTranscription((prev) => [...prev, userMessage, robotMessage]);
+          setMostRecentUserMessage(data.transcribed_text);
+          if (data.rag_context) {
+            setRagDocuments(data.rag_context);
+          }
+          runEhrFunction();
         }
-        runEhrFunction();
       }
     } catch (error) {
       console.error("Error fetching final function:", error);
@@ -175,10 +175,10 @@ const Counseling = () => {
     }
   };
 
-  useEffect(() => {
-    const interval = setInterval(fetchLatestImage, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(fetchLatestImage, 1000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   const fetchLatestImage = async () => {
     try {
