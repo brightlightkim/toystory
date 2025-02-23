@@ -3,7 +3,7 @@ import os
 import json
 
 
-def openai_checklist_controller(conversation: str, checklist: list[str]) -> dict[str, bool]:
+def openai_checklist_controller(conversation: str, health_record: dict) -> dict:
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     system_prompt = """
@@ -15,17 +15,19 @@ def openai_checklist_controller(conversation: str, checklist: list[str]) -> dict
     User: Yep! All the way
     Bear: What about those bananas?
     User: Yuck! No way!
-    Checklist: ["drank_2liters_water", "ate_banana"]
-    Result: {"drank_2liters_water": true, "ate_banana": false}
+    Checklist: {"physiologicalFunctions": {"hydration": false, "nutrition": false}}
+    Result: {"physiologicalFunctions": {"hydration": true, "nutrition": false}}
 
     Conversation: 
     Bear: Did you finish your homework?
     User: Yes, I did.
     Bear: Did you clean your room?
     User: No, I forgot.
-    Checklist: ["finished_homework", "cleaned_room"]
-    Result: {"finished_homework": true, "cleaned_room": false}
+    Checklist: {"academicPerformance": {"cognitiveEngagement": false}, "physiologicalFunctions": {"personalHygiene": false}}
+    Result: {"academicPerformance": {"cognitiveEngagement": true}, "physiologicalFunctions": {"personalHygiene": false}}
     """
+
+    checklist = [key for category in health_record.values() for key in category.keys()]
 
     history = [
         {"role": "system", "content": system_prompt},
@@ -43,11 +45,15 @@ def openai_checklist_controller(conversation: str, checklist: list[str]) -> dict
         try:
             response_json = json.loads(response_content)
             if all(isinstance(response_json.get(item), bool) for item in checklist):
-                return response_json
+                for category, conditions in health_record.items():
+                    for condition in conditions:
+                        if condition in response_json:
+                            health_record[category][condition] = response_json[condition]
+                return health_record
         except json.JSONDecodeError:
             pass
 
         history.append({"role": "assistant", "content": response_content})
         history.append({"role": "user", "content": "Please provide the result in the correct JSON format."})
 
-    return { item: False for item in checklist }
+    return health_record
