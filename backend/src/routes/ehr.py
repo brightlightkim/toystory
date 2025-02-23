@@ -28,7 +28,7 @@ async def ehr_function(request: EHRRequest) -> Dict[str, Any]:
     try:
         query = request.query
 
-        response = openai_ehr_controller(context={"name": "Daniel", "emotion": "happy"}, query=query)
+        response = openai_ehr_controller.openai_ehr_controller(context={"name": "Daniel", "emotion": "happy"}, query=query)
 
         print("Response:", response)
 
@@ -50,7 +50,7 @@ async def ehr_check(request: EHRCheckRequest) -> Dict[str, Any]:
         checklist = request.checklist
         conversation = request.conversation
 
-        response = openai_checklist_controller(conversation, checklist)
+        response = openai_checklist_controller.openai_checklist_controller(conversation, checklist)
 
         print("Response:", response)
 
@@ -64,7 +64,7 @@ async def ehr_detection(request: EHRDetectionRequest) -> Dict[str, Any]:
     try:
         conversation = request.conversation
 
-        response = openai_detection_controller(conversation)
+        response = openai_detection_controller.openai_detection_controller(conversation)
 
         print("Response:", response)
 
