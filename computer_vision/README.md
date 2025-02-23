@@ -9,7 +9,7 @@ pip install -r requirements.txt
 
 2. Run the server:
 ```bash
-gunicorn main:app 127.0.0.1:8080
+gunicorn main:app --bind 127.0.0.1:8080
 ```
 
 3. Test with an image (in new terminal):
