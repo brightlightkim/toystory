@@ -72,6 +72,12 @@ async def final_function(request: FinalRequest) -> Dict[str, Any]:
             if not characterized_response:
                 return {"status": 404, "message": "No response generated"}
 
+            # i have to do this because we return plaintext now
+            characterized_response = {
+                "script": characterized_response,
+                "voice": request.character,
+            }
+
             tts_class = tts_controller.TTSController()
 
             tts_class.convert_text_to_speech(
@@ -80,7 +86,8 @@ async def final_function(request: FinalRequest) -> Dict[str, Any]:
 
             return {
                 "transcribed_text": transcribed_text,
-                "characterized_response": characterized_response
+                "characterized_response": characterized_response,
+                "rag_context": rag_context,
             }
         return HTTPException(status_code=404, detail="No new audio found")
     except Exception as e:

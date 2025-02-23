@@ -149,3 +149,6 @@ __pycache__
 # yolov files
 .yolov
 *yolov*.pt
+
+
+results/*
