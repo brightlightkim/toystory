@@ -21,6 +21,7 @@ client = OpenAI()
 
 class FinalRequest(BaseModel):
     character: str
+    text_input: Optional[str] = None
     voice_repo: Optional[str] = (
         "s3://voice-cloning-zero-shot/a9cabd69-695e-48a2-a96d-1f237840c7bc/original/manifest.json"
     )
@@ -32,6 +33,37 @@ final_router = APIRouter(prefix="/final")
 @final_router.post("/")
 async def final_function(request: FinalRequest) -> Dict[str, Any]:
     try:
+        if request.text_input:
+            transcribed_text = request.text_input
+            rag_context = await langchain_rag.vector_retrieval(transcribed_text)
+            characterized_response = openai_chat_controller(
+                context={
+                    "name": "Daniel",
+                    "emotion": "happy",
+                    "rag_context": rag_context,
+                },
+                prompt=transcribed_text,
+            )
+
+            if not characterized_response:
+                return {"status": 404, "message": "No response generated"}
+
+            # i have to do this because we return plaintext now
+            characterized_response = {
+                "script": characterized_response,
+                "voice": request.character,
+            }
+
+            tts_class = tts_controller.TTSController()
+
+            tts_class.convert_text_to_speech(characterized_response, request.voice_repo)
+
+            return {
+                "transcribed_text": transcribed_text,
+                "characterized_response": characterized_response,
+                "rag_context": rag_context,
+            }
+
         latest_audio = await supabase_handler.fetch_latest_user_audio_from_supabase()
         if latest_audio:
 
@@ -54,7 +86,7 @@ async def final_function(request: FinalRequest) -> Dict[str, Any]:
             print("Transcribed Text:", transcribed_text)
 
             rag_context = await langchain_rag.vector_retrieval(transcribed_text)
-            
+
             print("RAG Context:", rag_context)
 
             characterized_response = openai_chat_controller(
@@ -80,9 +112,7 @@ async def final_function(request: FinalRequest) -> Dict[str, Any]:
 
             tts_class = tts_controller.TTSController()
 
-            tts_class.convert_text_to_speech(
-                characterized_response, request.voice_repo
-            )
+            tts_class.convert_text_to_speech(characterized_response, request.voice_repo)
 
             return {
                 "transcribed_text": transcribed_text,

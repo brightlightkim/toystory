@@ -23,10 +23,10 @@ const Counseling = () => {
   // 🌟 데이터 소스 선택 상태 (웹캠 또는 로봇)
   const [dataSource, setDataSource] = useState("robot"); // 'webcam' 또는 'robot'
 
-  useEffect(() => {
-    const interval = setInterval(runFinalFunction, 1000); // 로봇 데이터 주기적 GET 요청
-    return () => clearInterval(interval);
-  }, [dataSource]);
+  // useEffect(() => {
+  //   const interval = setInterval(runFinalFunction, 1000); // 로봇 데이터 주기적 GET 요청
+  //   return () => clearInterval(interval);
+  // }, [dataSource]);
 
   const runFinalFunction = async () => {
     try {
@@ -78,52 +78,32 @@ const Counseling = () => {
     }
   };
 
-  const fetchChatHistory = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost:8000/chat/history/736d02e0-376a-425a-b76d-78967be66ba0"
-      );
-      const data = await response.json();
-      console.log("Full Response:", data); // 전체 데이터 확인용
-
-      // content만 추출 후 JSON 파싱
-      const parsedMessages = data.map((item) => {
-        const parsedContent = JSON.parse(item.content); // 문자열 파싱
-        return {
-          role: parsedContent.role, // 'assistant' 또는 'user'
-          content: parsedContent.content, // 메시지 내용
-        };
-      });
-
-      console.log("Parsed Messages:", parsedMessages);
-
-      // 상태 업데이트 (Transcription)
-      if (parsedMessages.length) {
-        setTranscription(parsedMessages); // 여기서 parsedMessages로 업데이트
-      }
-    } catch (error) {
-      console.error("Error fetching chat history:", error);
-    }
-  };
-
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
 
     try {
-      const response = await fetch("http://localhost:8000/chat/send", {
+      const response = await fetch("http://localhost:8000/final", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          sessionid: "736d02e0-376a-425a-b76d-78967be66ba0",
-          message: newMessage,
+          character: "ted the bear",
+          text_input: newMessage,
         }),
       });
 
       if (response.ok) {
+        setTranscription((prev) => [
+          ...prev,
+          { role: "user", content: newMessage },
+          {
+            role: "assistant",
+            content: response.json().characterized_response,
+          },
+        ]);
+
         setNewMessage("");
-        fetchChatHistory();
       }
     } catch (error) {
       console.error("Error sending message:", error);
@@ -137,9 +117,7 @@ const Counseling = () => {
         className={`flex-1 h-full bg-gray-100 shadow-md flex flex-col justify-between`}
       >
         {/* Chat Messages */}
-        <div
-          className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50"
-        >
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
           {transcription.map((msg, index) => (
             <ChatMessage
               key={index}
