@@ -1,11 +1,13 @@
 from fastapi import APIRouter, File, UploadFile
 from fastapi.responses import JSONResponse
-from src.controllers.yolo_model import detect_faces
-from src.controllers.deepface_model import analyze_emotion
-from src.controllers.image_processor import preprocess_image, crop_face
-from src.controllers.supabase_handler import fetch_latest_image_from_supabase
+# from src.controllers.yolo_model import detect_faces
+# from src.controllers.deepface_model import analyze_emotion
+# from src.controllers.image_processor import preprocess_image, crop_face
+# from src.controllers.supabase_handler import fetch_latest_image_from_supabase
+from src.controllers.openai_emotion_controller import openai_emotion_controller
 import numpy as np
 import cv2
+import base64
 
 emotion_router = APIRouter(prefix="/emotion")
 
@@ -110,8 +112,22 @@ async def analyze_webcam(image: UploadFile = File(...)):
 
 
     # return JSONResponse(content={"emotion": emotion_data, "happiness_score": round(float(happiness_score), 2)})
+
+    contents = await image.read()
+    encoded_image = base64.b64encode(contents).decode('utf-8')
+
+    emotion_data = await openai_emotion_controller(encoded_image)
+
+    if isinstance(emotion_data, list) and len(emotion_data) > 0:
+        emotion_data = emotion_data[0]
+
+    # Extract the emotion and happiness score
+    emotion = emotion_data.get("emotion", "neutral")
+    happiness_score = float(emotion_data.get("happiness_score", 0))
+
+    return JSONResponse(content={"emotion": emotion, "happiness_score": round(float(happiness_score), 2)})
     
-    return JSONResponse(content={"emotion": "No face detected", "happiness_score": 0})
+    # return JSONResponse(content={"emotion": "No face detected", "happiness_score": 0})
 
 
 @emotion_router.get("/happiness_score/")
