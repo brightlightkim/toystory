@@ -17,13 +17,20 @@ vector_store = SupabaseVectorStore(
     query_name="match_documents",
 )
 
+
 async def vector_retrieval(query: str, limit: int = 3, threshold: float = 0.7) -> list:
     print("Query:", query)
     print("Limit:", limit)
     print("Threshold:", threshold)
     try:
-        matched_docs = vector_store.similarity_search_with_relevance_scores(query=query, k=limit)
-        return [getattr(doc[0], "page_content", "") for doc in matched_docs if doc[1] > threshold]
+        matched_docs = vector_store.similarity_search_with_relevance_scores(
+            query=query, k=limit
+        )
+        return [
+            {"content": getattr(doc[0], "page_content", ""), "score": doc[1]}
+            for doc in matched_docs
+            if doc[1] > threshold
+        ]
     except Exception as e:
         print("Error in vector retrieval:", e)
         return []

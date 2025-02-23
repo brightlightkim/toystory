@@ -12,6 +12,55 @@ const Counseling = () => {
   const [transcription, setTranscription] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [ragDocuments, setRagDocuments] = useState([]);
+  const [healthRecord, setHealthRecord] = useState({
+    physiologicalFunctions: {
+      bowelMovement: false,
+      urination: false,
+      hydration: false,
+      nutrition: false,
+      sleepCycle: false,
+      oralHygiene: false,
+      personalHygiene: false,
+      fatigue: false,
+      gastrointestinalDiscomfort: false,
+      cephalgia: false,
+    },
+    psychologicalStatus: {
+      positiveAffect: false,
+      anxietyDepression: false,
+      concentrationDeficit: false,
+      phobicSymptoms: false,
+      psychomotorRetardation: false,
+    },
+    physicalActivity: {
+      outdoorActivity: false,
+      sedentaryBehavior: false,
+      muscularFlexibility: false,
+      physicalTrauma: false,
+      mobilityImpairment: false,
+    },
+    nutritionalIntake: {
+      morningNutrition: false,
+      excessiveSugarIntake: false,
+      carbonatedBeverages: false,
+      appetiteChanges: false,
+      hyperphagia: false,
+    },
+    academicPerformance: {
+      cognitiveEngagement: false,
+      learningDifficulties: false,
+      academicFatigue: false,
+      socialInteraction: false,
+      academicAnxiety: false,
+    },
+    clinicalStatus: {
+      medicationAdherence: false,
+      bronchodilatorUsage: false,
+      allergicResponse: false,
+      respiratoryDistress: false,
+      dermatologicalSymptoms: false,
+    },
+  });
 
   const avatars = [
     { name: "Ted", img: ted },
@@ -96,10 +145,10 @@ const Counseling = () => {
     }
   };
 
-  useEffect(() => {
-    const interval = setInterval(fetchLatestImage, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(fetchLatestImage, 1000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   const fetchLatestImage = async () => {
     try {
@@ -133,7 +182,7 @@ const Counseling = () => {
           ))}
         </div>
 
-        {/* Chat Input - removed margin/padding bottom */}
+        {/* Chat Input - fixed at bottom */}
         <div className="border-t bg-white shadow-up">
           <div className="flex space-x-2 p-3">
             {" "}
@@ -155,45 +204,71 @@ const Counseling = () => {
         <div className="h-16 bg-white"></div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 ml-0">
-        {/* Main Counseling UI */}
+      {/* Main Content - Scrollable */}
+      <div className="flex-1 h-screen overflow-y-auto">
         <img
           src={mostRecentImage || avatars[0].img}
           alt="Avatar"
           className="w-full h-96 p-4"
         />
 
-        <h3 className="text-lg font-semibold mb-4 p-4">
-          EHR (Electronic Health Record)
-        </h3>
+        <div className="grid grid-cols-2 gap-4 p-4">
+          {Object.entries(healthRecord).map(([category, items]) => (
+            <div key={category} className="bg-white rounded-lg shadow-md p-4">
+              <h4 className="text-lg font-semibold mb-3 text-indigo-600 capitalize">
+                {category.replace(/([A-Z])/g, " $1").trim()}
+              </h4>
+              <div className="space-y-2">
+                {Object.entries(items).map(([item, value]) => (
+                  <div key={item} className="flex items-center justify-between">
+                    <span className="text-sm text-gray-700 capitalize">
+                      {item.replace(/([A-Z])/g, " $1").trim()}
+                    </span>
+                    <span
+                      className={`text-sm font-medium ${
+                        value ? "text-green-500" : "text-red-500"
+                      }`}
+                    >
+                      {value ? "✓" : "✗"}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className="flex-1 ml-0">
+      {/* RAG Section - Scrollable */}
+      <div className="flex-1 h-screen overflow-y-auto">
         <div className="mt-6 w-full flex justify-center">
           <HappinessChart dataSource={dataSource} />
         </div>
 
-        <h3 className="text-lg font-semibold p-4">
-          RAG with Finetuned Embedding Model
+        <h3 className="text-lg font-semibold text-center p-4">
+          Top 3 Most Relevant Documents from Fine-Tuned RAG
         </h3>
-        {/* display RAG documents */}
         <div className="p-4 space-y-4">
           {ragDocuments.map((doc, index) => (
             <div
               key={index}
-              className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow"
+              className={`bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow
+                ${index === 0 ? "border-2 border-indigo-500" : ""}`}
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-semibold text-indigo-600">
-                  Document {index + 1}
+                  {index === 0
+                    ? "🥇 Most Relevant"
+                    : index === 1
+                    ? "🥈 Second Most Relevant"
+                    : "🥉 Third Most Relevant"}
                 </span>
                 <span className="text-xs text-gray-500">
-                  Relevance Score: {(1 - index * 0.2).toFixed(2)}
+                  Similarity Score: {doc.score.toFixed(2)}
                 </span>
               </div>
               <div className="text-sm text-gray-700 max-h-40 overflow-y-auto">
-                {doc.split('\n').map((paragraph, i) => (
+                {doc.content.split("\n").map((paragraph, i) => (
                   <p key={i} className="mb-2">
                     {paragraph}
                   </p>
