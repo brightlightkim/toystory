@@ -166,13 +166,11 @@ const Counseling = () => {
   };
 
   return (
-    <div className="relative flex h-screen overflow-hidden">
+    <div className="relative flex h-screen overflow-hidden bg-gray-50">
       {/* Chat Section */}
-      <div
-        className={`flex-1 h-full bg-gray-100 shadow-md flex flex-col justify-between`}
-      >
+      <div className="flex-1 h-full flex flex-col justify-between bg-gray-100 border-2 border-gray-100 shadow-lg">
         {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {transcription.map((msg, index) => (
             <ChatMessage
               key={index}
@@ -182,20 +180,19 @@ const Counseling = () => {
           ))}
         </div>
 
-        {/* Chat Input - fixed at bottom */}
-        <div className="border-t bg-white shadow-up">
-          <div className="flex space-x-2 p-3">
-            {" "}
+        {/* Chat Input */}
+        <div className="border-t border-gray-200 bg-white p-4">
+          <div className="flex items-center space-x-4">
             <input
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Type your message..."
-              className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="flex-1 px-6 py-3 border-2 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             />
             <button
               onClick={handleSendMessage}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              className="px-8 py-3 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-all transform hover:scale-105"
             >
               Send
             </button>
@@ -204,31 +201,27 @@ const Counseling = () => {
         <div className="h-16 bg-white"></div>
       </div>
 
-      {/* Main Content - Scrollable */}
-      <div className="flex-1 h-screen overflow-y-auto">
+      {/* Avatar and Health Section */}
+      <div className="flex-1 h-screen overflow-y-auto bg-gray-50 px-6 py-4">
         <img
           src={mostRecentImage || avatars[0].img}
           alt="Avatar"
-          className="w-full h-96 p-4"
+          className="w-full h-96 object-cover rounded-2xl shadow-lg mb-6"
         />
 
-        <div className="grid grid-cols-2 gap-4 p-4">
+        <div className="grid grid-cols-2 gap-6">
           {Object.entries(healthRecord).map(([category, items]) => (
-            <div key={category} className="bg-white rounded-lg shadow-md p-4">
-              <h4 className="text-lg font-semibold mb-3 text-indigo-600 capitalize">
+            <div key={category} className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all">
+              <h4 className="text-xl font-bold mb-4 text-indigo-600 capitalize">
                 {category.replace(/([A-Z])/g, " $1").trim()}
               </h4>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {Object.entries(items).map(([item, value]) => (
-                  <div key={item} className="flex items-center justify-between">
+                  <div key={item} className="flex items-center justify-between py-1">
                     <span className="text-sm text-gray-700 capitalize">
                       {item.replace(/([A-Z])/g, " $1").trim()}
                     </span>
-                    <span
-                      className={`text-sm font-medium ${
-                        value ? "text-green-500" : "text-red-500"
-                      }`}
-                    >
+                    <span className={`text-sm font-medium ${value ? "text-emerald-500" : "text-rose-500"}`}>
                       {value ? "✓" : "✗"}
                     </span>
                   </div>
@@ -239,37 +232,33 @@ const Counseling = () => {
         </div>
       </div>
 
-      {/* RAG Section - Scrollable */}
-      <div className="flex-1 h-screen overflow-y-auto">
-        <div className="mt-6 w-full flex justify-center">
+      {/* RAG Section */}
+      <div className="flex-1 h-screen overflow-y-auto bg-gray-50 px-6 pt-4">
+        <div className="mb-4">
           <HappinessChart dataSource={dataSource} />
         </div>
 
-        <h3 className="text-lg font-semibold text-center p-4">
-          Top 3 Most Relevant Documents from Fine-Tuned RAG
+        <h3 className="text-2xl font-bold text-center mb-2 text-indigo-600">
+          Top 3 Most Relevant Documents
         </h3>
-        <div className="p-4 space-y-4">
+        <div className="space-y-6">
           {ragDocuments.map((doc, index) => (
             <div
               key={index}
-              className={`bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow
-                ${index === 0 ? "border-2 border-indigo-500" : ""}`}
+              className={`bg-white rounded-xl p-6 transition-all hover:shadow-lg
+                ${index === 0 ? "border-2 border-indigo-500 shadow-md" : "shadow-sm"}`}
             >
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-indigo-600">
-                  {index === 0
-                    ? "🥇 Most Relevant"
-                    : index === 1
-                    ? "🥈 Second Most Relevant"
-                    : "🥉 Third Most Relevant"}
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-lg font-semibold text-indigo-600">
+                  {index === 0 ? "🥇 Most Relevant" : index === 1 ? "🥈 Second Most Relevant" : "🥉 Third Most Relevant"}
                 </span>
-                <span className="text-xs text-gray-500">
-                  Similarity Score: {doc.score.toFixed(2)}
+                <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                  Score: {doc.score.toFixed(2)}
                 </span>
               </div>
-              <div className="text-sm text-gray-700 max-h-40 overflow-y-auto">
+              <div className="text-gray-700 max-h-48 overflow-y-auto prose">
                 {doc.content.split("\n").map((paragraph, i) => (
-                  <p key={i} className="mb-2">
+                  <p key={i} className="mb-3">
                     {paragraph}
                   </p>
                 ))}
