@@ -175,10 +175,10 @@ const Counseling = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const interval = setInterval(fetchLatestImage, 1000);
-  //   return () => clearInterval(interval);
-  // }, []);
+  useEffect(() => {
+    const interval = setInterval(fetchLatestImage, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const fetchLatestImage = async () => {
     try {
