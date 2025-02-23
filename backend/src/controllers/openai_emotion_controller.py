@@ -4,7 +4,8 @@ import base64
 from io import BytesIO
 import json
 
-def openai_emotion_controller(image_base64: str) -> dict:
+
+def openai_emotion_controller(image_url: str) -> dict:
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     system_prompt = """
@@ -26,8 +27,18 @@ def openai_emotion_controller(image_base64: str) -> dict:
 
     history = [
         {"role": "system", "content": system_prompt},
-        {"role": "user", "content": "Here is the image of the person."},
-        {"role": "user", "content": image_base64},
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": "Here is the image of the person."},
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": image_url,
+                    },
+                },
+            ],
+        },
     ]
 
     for _ in range(3):
@@ -38,6 +49,16 @@ def openai_emotion_controller(image_base64: str) -> dict:
 
         response_content = result.choices[0].message.content.strip()
 
+        # Remove markdown code block indicators if present
+        response_content = response_content.strip()
+        if response_content.startswith("```json"):
+            response_content = response_content[7:]
+        if response_content.startswith("```"):
+            response_content = response_content[3:]
+        if response_content.endswith("```"):
+            response_content = response_content[:-3]
+        response_content = response_content.strip()
+
         try:
             response_json = json.loads(response_content)
             if "emotion" in response_json and "happiness_score" in response_json:
@@ -46,6 +67,11 @@ def openai_emotion_controller(image_base64: str) -> dict:
             pass
 
         history.append({"role": "assistant", "content": response_content})
-        history.append({"role": "user", "content": "Please provide the result as a JSON object with 'emotion' and 'happiness_score' keys."})
+        history.append(
+            {
+                "role": "user",
+                "content": "Please provide the result as a JSON object with 'emotion' and 'happiness_score' keys.",
+            }
+        )
 
     return {"emotion": "unknown", "happiness_score": 0}

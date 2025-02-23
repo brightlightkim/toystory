@@ -10,6 +10,7 @@ from routes.tts_routes import tts_router
 from routes.ehr import ehr_router
 from routes.final import final_router
 from routes.image import image_router
+from routes.emotion import emotion_router
 
 
 # 현재 파일의 디렉토리를 기준으로 상대 경로 설정
@@ -30,6 +31,7 @@ app.include_router(tts_router)
 app.include_router(ehr_router)
 app.include_router(final_router)
 app.include_router(image_router)
+app.include_router(emotion_router)
 
 # CORS 설정 (React 프론트엔드 연결)
 app.add_middleware(
