@@ -1,5 +1,5 @@
 [project]
-authors = ["menamerai <rphananh@gmail.com>"]
+authors = ["taeyangkim <sunguard9509@gmail.com>", "menamerai <rphananh@gmail.com>"]
 channels = ["conda-forge"]
 description = "Add a short description here"
 name = "backend"
@@ -13,7 +13,6 @@ python = "3.10.*"
 fastapi = ">=0.115.8,<0.116"
 google-genai = ">=1.0.0,<2"
 opencv = ">=4.11.0,<5"
-supabase = ">=2.6.0,<3"
 langchain = ">=0.3.17,<0.4"
 langchain-google-genai = ">=2.0.10,<3"
 python-dotenv = ">=1.0.1,<2"
@@ -22,12 +21,9 @@ openai = ">=1.63.2"
 ultralytics = ">=8.3.78"
 pytorch = ">=2.6.0"
 torchvision = ">=0.21.0"
-httpx = ">=0.24.0"
-gotrue = "==2.8.0"
-protobuf = "5.28.3.*"
-langchain-community = ">=0.3.18,<0.4"
+httpx = ">=0.26"
 
 [pypi-dependencies]
 huggingface-hub = { version = "*", extras = ["cli"] }
-protobuf = "==5.28.3"
-
+supabase = ">=2.13.0, <3"
+langchain-community = ">=0.3.16, <0.4"

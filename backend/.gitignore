@@ -149,3 +149,10 @@ __pycache__
 # yolov files
 .yolov
 *yolov*.pt
+
+
+results/*
+
+# Pixi lock file
+.pixi.lock
+*.lock

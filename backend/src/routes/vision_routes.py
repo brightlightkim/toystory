@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Response
 import cv2
-
 import sys
+
 sys.path.append("..")
 from controllers.vision_controller import MoodAnalyzer
 

@@ -1,12 +1,14 @@
 import cv2
 import numpy as np
-import mediapipe as mp
-from deepface import DeepFace
+# import mediapipe as mp
+# from deepface import DeepFace
 
 class MoodAnalyzer:
     def __init__(self):
-        self.mp_face = mp.solutions.face_detection
-        self.face_detection = self.mp_face.FaceDetection(min_detection_confidence=0.5)
+        self.mp_face = None
+        self.face_detection = None
+        # self.mp_face = mp.solutions.face_detection
+        # self.face_detection = self.mp_face.FaceDetection(min_detection_confidence=0.5)
 
     def analyze_emotions(self, frame: np.ndarray) -> str:
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -18,8 +20,9 @@ class MoodAnalyzer:
         for (x, y, w, h) in faces:
             face_roi = rgb_frame[y:y + h, x:x + w]
             try:
-                result = DeepFace.analyze(face_roi, actions=['emotion'], enforce_detection=False)
-                return result[0]['dominant_emotion']
+                # result = DeepFace.analyze(face_roi, actions=['emotion'], enforce_detection=False)
+                # return result[0]['dominant_emotion']
+                return None
             except Exception:
                 continue
         
