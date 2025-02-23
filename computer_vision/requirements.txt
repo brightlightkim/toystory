@@ -1,0 +1,8 @@
+tf-keras
+opencv-python
+numpy
+mediapipe
+deepface
+flask
+flask_restful
+gunicorn

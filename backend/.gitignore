@@ -152,3 +152,7 @@ __pycache__
 
 
 results/*
+
+# Pixi lock file
+.pixi.lock
+*.lock
