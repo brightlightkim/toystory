@@ -19,7 +19,7 @@ async def fetch_latest_image_from_supabase(bucket_name="robot", folder_name="ima
     try:
         response = supabase.storage.from_(bucket_name).list(
             folder_name,
-            {"limit": 1, "sortBy": {"column": ".metadata.created_at", "order": "desc"}},
+            {"limit": 1, "sortBy": {"column": "created_at", "order": "desc"}},
         )
 
         if response and len(response) > 0:
@@ -28,16 +28,17 @@ async def fetch_latest_image_from_supabase(bucket_name="robot", folder_name="ima
 
             # ✅ If the previously processed image is the same, return None (to prevent duplicates)
             if last_processed_files["image"] == file_name:
-                print("No new image found. Skipping...")
                 return None
 
             # Download the latest image
             file_path = f"{folder_name}/{file_name}"
-            file_data = supabase.storage.from_(bucket_name).download(file_path)
+            signed_url = supabase.storage.from_(bucket_name).create_signed_url(
+                file_path, expires_in=3600
+            )
 
             # ✅ If it's a new image, update the last processed file
             last_processed_files["image"] = file_name
-            return file_data
+            return signed_url["signedURL"]
 
         return None
     except Exception as e:

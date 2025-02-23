@@ -8,8 +8,10 @@ import ChatMessage from "../components/ChatMessage";
 const Counseling = () => {
   const [emotion, setEmotion] = useState("neutral");
   const [happinessScore, setHappinessScore] = useState(0); // 행복지수 추가
+  const [mostRecentImage, setMostRecentImage] = useState(null);
   const [transcription, setTranscription] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [ragDocuments, setRagDocuments] = useState([]);
 
   const avatars = [
     { name: "Ted", img: ted },
@@ -54,6 +56,7 @@ const Counseling = () => {
 
         // Update transcription with new messages
         setTranscription((prev) => [...prev, userMessage, robotMessage]);
+        setRagDocuments(data.rag_context);
       }
     } catch (error) {
       console.error("Error fetching final function:", error);
@@ -85,11 +88,31 @@ const Counseling = () => {
             content: data.characterized_response,
           },
         ]);
-
+        setRagDocuments(data.rag_context);
         setNewMessage("");
       }
     } catch (error) {
       console.error("Error sending message:", error);
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(fetchLatestImage, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const fetchLatestImage = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/image/latest");
+      const data = await response.json();
+
+      if (data.status === 200) {
+        if (data.image_url != null) {
+          setMostRecentImage(data.image_url);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching latest image:", error);
     }
   };
 
@@ -114,7 +137,6 @@ const Counseling = () => {
         <div className="border-t bg-white shadow-up">
           <div className="flex space-x-2 p-3">
             {" "}
-            {/* Reduced padding */}
             <input
               type="text"
               value={newMessage}
@@ -136,11 +158,13 @@ const Counseling = () => {
       {/* Main Content */}
       <div className="flex-1 ml-0">
         {/* Main Counseling UI */}
-        <div className="flex flex-col justify-center items-center bg-white p-8 min-h-screen">
-          <h2 className="text-xl font-semibold mb-4">AI Counseling Session</h2>
-        </div>
+        <img
+          src={mostRecentImage || avatars[0].img}
+          alt="Avatar"
+          className="w-full h-96 p-4"
+        />
 
-        <h3 className="text-lg font-semibold mb-4">
+        <h3 className="text-lg font-semibold mb-4 p-4">
           EHR (Electronic Health Record)
         </h3>
       </div>
@@ -150,9 +174,34 @@ const Counseling = () => {
           <HappinessChart dataSource={dataSource} />
         </div>
 
-        <h3 className="text-lg font-semibold mb-4">
+        <h3 className="text-lg font-semibold p-4">
           RAG with Finetuned Embedding Model
         </h3>
+        {/* display RAG documents */}
+        <div className="p-4 space-y-4">
+          {ragDocuments.map((doc, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-semibold text-indigo-600">
+                  Document {index + 1}
+                </span>
+                <span className="text-xs text-gray-500">
+                  Relevance Score: {(1 - index * 0.2).toFixed(2)}
+                </span>
+              </div>
+              <div className="text-sm text-gray-700 max-h-40 overflow-y-auto">
+                {doc.split('\n').map((paragraph, i) => (
+                  <p key={i} className="mb-2">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
