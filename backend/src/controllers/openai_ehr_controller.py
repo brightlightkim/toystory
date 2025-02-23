@@ -2,7 +2,7 @@ from openai import OpenAI
 import os
 
 
-def openai_ehr_controller(context:dict, query: str):
+def openai_ehr_controller(context: dict, query: str):
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     system_prompt = ''
@@ -24,3 +24,4 @@ def openai_ehr_controller(context:dict, query: str):
     )
 
     response_content = result.choices[0].message.content
+    return response_content

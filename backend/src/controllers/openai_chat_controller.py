@@ -2,7 +2,7 @@ from openai import OpenAI
 import os
 
 
-def openai_chat_controller(context: dict, prompt: str):
+def openai_chat_controller(context: dict, prompt: str) -> str:
     # expecting context as {name: str, emotion: str, rag_context: list[str]}
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
@@ -38,3 +38,4 @@ def openai_chat_controller(context: dict, prompt: str):
         messages=history,
     )
     response_content = result.choices[0].message.content
+    return response_content
