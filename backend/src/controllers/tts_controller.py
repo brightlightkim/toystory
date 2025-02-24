@@ -7,8 +7,7 @@ from dotenv import load_dotenv
 
 from supabase import create_client, Client
 from fastapi import HTTPException
-
-from fastapi import HTTPException
+from elevenlabs import ElevenLabs
 
 load_dotenv()
 
@@ -17,6 +16,9 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 supabase: Client = create_client(supabase_url=SUPABASE_URL, supabase_key=SUPABASE_KEY)
 
+client = ElevenLabs(
+    api_key="YOUR_API_KEY",
+)
 
 class TTSController:
     def __init__(self):
@@ -26,26 +28,34 @@ class TTSController:
 
     def convert_text_to_speech(self, text, voice):
         try:
-            authorization = f"Bearer {self.api_key}"
-            print("Authorization", authorization)
-            user_id = os.getenv("PLAYHT_USER_ID")
-            print("User ID", user_id)
-            payload = {
-                "voice": voice,
-                "output_format": "mp3",
-                "voice_engine": "PlayHT2.0-turbo",
-                "text": text
-            }
-            headers = {
-                "accept": "audio/mpeg",
-                "content-type": "application/json",
-                "AUTHORIZATION": authorization,
-                "X-USER-ID": user_id,
-            }
+            # authorization = f"Bearer {self.api_key}"
+            # print("Authorization", authorization)
+            # user_id = os.getenv("PLAYHT_USER_ID")
+            # print("User ID", user_id)
+            # payload = {
+            #     "voice": voice,
+            #     "output_format": "mp3",
+            #     "voice_engine": "PlayHT2.0-turbo",
+            #     "text": text
+            # }
+            # headers = {
+            #     "accept": "audio/mpeg",
+            #     "content-type": "application/json",
+            #     "AUTHORIZATION": authorization,
+            #     "X-USER-ID": user_id,
+            # }
 
-            response = requests.post(
-                "https://api.play.ht/api/v2/tts/stream", headers=headers, data=json.dumps(payload)
+            # response = requests.post(
+            #     "https://api.play.ht/api/v2/tts/stream", headers=headers, data=json.dumps(payload)
+            # )
+            
+            response = client.text_to_speech.convert(
+                voice_id="JBFqnCBsd6RMkjVDRZzb",
+                output_format="mp3_44100_128",
+                text=text,
+                model_id=voice,
             )
+
 
             if response.status_code == 200:
                 # Generate a unique filename

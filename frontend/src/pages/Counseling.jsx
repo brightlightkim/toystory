@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import HappinessChart from "../components/HappinessChart";
 import elon from "../assets/elon.png";
 import donald from "../assets/donald.png";
 import ted from "../assets/ted.png";
@@ -8,6 +7,8 @@ import ChatMessage from "../components/ChatMessage";
 const Counseling = () => {
   const [mostRecentImage, setMostRecentImage] = useState(null);
   const [mostRecentUserMessage, setMostRecentUserMessage] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState("");
   const [transcription, setTranscription] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [ragDocuments, setRagDocuments] = useState([]);
@@ -127,7 +128,7 @@ const Counseling = () => {
           // Update transcription with new messages
           setTranscription((prev) => [...prev, userMessage, robotMessage]);
           setMostRecentUserMessage(data.transcribed_text);
-          if (data.rag_context) {
+          if (data.rag_context && data.rag_context.length > 0) {
             setRagDocuments(data.rag_context);
           }
           runEhrFunction();
@@ -163,7 +164,7 @@ const Counseling = () => {
             content: data.characterized_response,
           },
         ]);
-        if (data.rag_context) {
+        if (data.rag_context && data.rag_context.length > 0) {
           setRagDocuments(data.rag_context);
         }
         setMostRecentUserMessage(newMessage);
@@ -192,6 +193,33 @@ const Counseling = () => {
       }
     } catch (error) {
       console.error("Error fetching latest image:", error);
+    }
+  };
+
+  const handleEhrRequest = async () => {
+    try {
+      let prompt = "Now you need to ask the user sound like ted the bear in the movie regarding whether the paitient did"+ selectedItem+"kindly. Please generate a response. Only return the response not adding any additional words like sure I can do that.";
+      const response = await fetch("http://localhost:8000/ehr/request", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: prompt,
+          character: "ted the bear",
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const new_transcription = {
+          role: "assistant",
+          content: data.characterized_response,
+        };
+        setTranscription((prev) => [...prev, new_transcription]);
+      }
+    } catch (error) {
+      console.error("Error requesting EHR:", error);
     }
   };
 
@@ -239,6 +267,35 @@ const Counseling = () => {
           className="w-full h-96 object-cover rounded-2xl shadow-lg mb-6"
         />
 
+        {/* Modal */}
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+              <h3 className="text-lg font-semibold mb-4">
+                Do you want to ask Ted to ask your patient about &quot;
+                {selectedItem}&quot;?
+              </h3>
+              <div className="flex justify-end space-x-4">
+                <button
+                  onClick={() => {
+                    handleEhrRequest();
+                    setIsModalOpen(false);
+                  }}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <h3 className="text-2xl font-bold text-center mb-2 text-indigo-600">
           Electronic Health Record (EHR)
         </h3>
@@ -258,7 +315,13 @@ const Counseling = () => {
                     key={item}
                     className="flex items-center justify-between py-1"
                   >
-                    <span className="text-sm text-gray-700 capitalize">
+                    <span
+                      className="text-sm text-gray-700 capitalize cursor-pointer hover:text-indigo-600"
+                      onClick={() => {
+                        setSelectedItem(item);
+                        setIsModalOpen(true);
+                      }}
+                    >
                       {item.replace(/([A-Z])/g, " $1").trim()}
                     </span>
                     <span

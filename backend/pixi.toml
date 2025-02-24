@@ -27,3 +27,4 @@ httpx = ">=0.26"
 huggingface-hub = { version = "*", extras = ["cli"] }
 supabase = ">=2.13.0, <3"
 langchain-community = ">=0.3.16, <0.4"
+elevenlabs = ">=1.51.0, <2"
